@@ -1,0 +1,3918 @@
+<!DOCTYPE html> 
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>STT Veil</title>
+<link rel="icon" type="image/png" href="imags/favicon.png">
+
+<style>
+  :root{
+    --bg: #f4f6f8;
+    --card: #ffffff;
+    --card2: #f7f8fa;
+    --border: #e6e9ee;
+    --text: #0f172a;
+    --muted: #64748b;
+    --muted2: #94a3b8;
+    --primary: #2a7cf7;
+    --primary2:#1f6ae6;
+    --danger:#ef4444;
+    --danger2:#dc2626;
+    --ok:#16a34a;
+    --shadow: 0 18px 50px rgba(15,23,42,.10);
+    --radius: 16px;
+  }
+
+  *{ box-sizing: border-box; }
+  html,body{ height:100%; }
+  body{
+    margin:0;
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft Yahei", Arial, sans-serif;
+    color: var(--text);
+    background:
+      radial-gradient(1000px 500px at 10% 0%, rgba(42,124,247,.10), transparent 60%),
+      radial-gradient(900px 500px at 90% 10%, rgba(15,23,42,.06), transparent 65%),
+      var(--bg);
+  }
+
+  .container{
+    max-width: 980px;
+    margin: 22px auto;
+    padding: 0 14px 50px;
+  }
+
+  .brandbar{
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap: 10px;
+  }
+  .logo{
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    background-image: url("imags/favicon.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    box-shadow: 0 8px 20px rgba(15,23,42,.16);
+  }
+  .brand h1{
+    margin:0;
+    font-size: 18px;
+    letter-spacing: .2px;
+  }
+  .brand .sub{
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 1px;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns: 1.2fr .8fr;
+    gap: 14px;
+  }
+  @media (max-width: 1024px){
+    .grid{ grid-template-columns: 1fr; }
+  }
+
+  .card{
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 14px;
+  }
+  .card.soft{
+    background: var(--card2);
+    box-shadow: none;
+  }
+
+  .title{
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .title h2{
+    margin:0;
+    font-size: 15px;
+    color: var(--text);
+  }
+  .hint{
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  label{
+    display:block;
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  input{
+    width:100%;
+    margin-top:6px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--text);
+    outline:none;
+    transition: .15s ease;
+  }
+  input::placeholder{ color: rgba(255,255,255,.35); }
+  input:focus{
+    border-color: rgba(42,124,247,.55);
+    box-shadow: 0 0 0 4px rgba(42,124,247,.12);
+    background: #fff;
+  }
+
+  .row{
+    display:flex;
+    gap: 10px;
+    align-items:center;
+    flex-wrap: wrap;
+  }
+
+  .btn{
+    appearance:none;
+    border:none;
+    border-radius: 12px;
+    padding: 10px 12px;
+    cursor:pointer;
+    font-weight: 600;
+    color: var(--text);
+    background: #f3f4f6;
+    border: 1px solid var(--border);
+    transition: .15s ease;
+    user-select:none;
+  }
+  .btn:hover{ transform: translateY(-1px); background: #e9edf3; }
+  .btn:active{ transform: translateY(0px); }
+  .btn.primary{
+    background: linear-gradient(135deg, var(--primary), var(--primary2));
+    border-color: rgba(42,124,247,.25);
+    color: #fff;
+  }
+  .btn.primary:hover{ filter: brightness(1.05); }
+  .btn.danger{
+    background: linear-gradient(135deg, var(--danger), var(--danger2));
+    border-color: rgba(239,68,68,.25);
+    color: #fff;
+  }
+  .btn.ghost{
+    background: transparent;
+  }
+  .btn.full{ width:100%; }
+
+  .pill{
+    display:inline-flex;
+    align-items:center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: #f8fafc;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .dot{
+    width:8px;height:8px;border-radius:999px;
+    background: rgba(255,255,255,0.40);
+  }
+  .dot.ok{ background: rgba(34,197,94,.95); }
+  .dot.bad{ background: rgba(239,68,68,.95); }
+  .dot.warn{ background: rgba(245,158,11,.95); }
+
+  .muted{ color: var(--muted); font-size: 12px; line-height: 1.45; }
+  .muted a{ color: rgba(147,197,253,.95); text-decoration:none; }
+  .muted a:hover{ text-decoration: underline; }
+
+  .sep{ height:1px; background: var(--border); margin: 12px 0; }
+
+  /* Login password eye */
+  .pw-wrapper{ position: relative; }
+  .toggle-eye{
+    position:absolute;
+    right: 10px;
+    top: 36px;
+    cursor:pointer;
+    user-select:none;
+    font-size: 16px;
+    opacity:.85;
+  }
+
+  /* Avatar */
+  .avatar{
+    width: 72px;
+    height: 72px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.18);
+    background: rgba(255,255,255,0.06);
+    object-fit: cover;
+  }
+
+  /* Toast */
+  .toast-wrap{
+    position: fixed;
+    right: 16px;
+    top: 16px;
+    display:flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 2000;
+    pointer-events: none;
+  }
+  .toast{
+    pointer-events: auto;
+    min-width: 260px;
+    max-width: 420px;
+    padding: 10px 12px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.14);
+    background: rgba(14,18,35,0.90);
+    box-shadow: 0 18px 60px rgba(0,0,0,.55);
+    backdrop-filter: blur(10px);
+    display:flex;
+    gap: 10px;
+    align-items:flex-start;
+  }
+  .toast .badge{
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    margin-top: 4px;
+    background: rgba(255,255,255,.45);
+  }
+  .toast.ok .badge{ background: rgba(34,197,94,.95); }
+  .toast.err .badge{ background: rgba(239,68,68,.95); }
+  .toast.warn .badge{ background: rgba(245,158,11,.95); }
+  .toast .msg{
+    font-size: 12px;
+    color: rgba(255,255,255,.86);
+    line-height: 1.45;
+  }
+  .toast .x{
+    margin-left:auto;
+    cursor:pointer;
+    opacity:.7;
+    user-select:none;
+  }
+  .toast .x:hover{ opacity:1; }
+
+  /* Collapsible */
+  details{
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 10px 12px;
+    background: #fff;
+  }
+  details summary{
+    cursor:pointer;
+    list-style:none;
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--text);
+  }
+  details summary::-webkit-details-marker{ display:none; }
+  details[open]{ background: #f8fafc; }
+  .caret{ opacity:.7; }
+
+  /* hidden */
+  .hidden{ display:none !important; }
+
+  /* ===== Settings Drawer ===== */
+.settings{
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+}
+
+.server-setup{
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  background: rgba(15,23,42,.45);
+  backdrop-filter: blur(4px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding: 16px;
+}
+.server-setup .panel{
+  width: 100%;
+  max-width: 560px;
+}
+
+.settings-mask{
+  position:absolute;
+  inset:0;
+  background: rgba(0,0,0,.45);
+  backdrop-filter: blur(4px);
+}
+
+.settings-panel{
+  position:absolute;
+  right:0;
+  top:0;
+  width: 420px;
+  max-width: 92%;
+  height:100%;
+  background: #f4f7fb;
+  border-left: 1px solid var(--border);
+  box-shadow: -20px 0 60px rgba(15,23,42,.20);
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.settings-header{
+  display:flex;
+  justify-content: space-between;
+  align-items:center;
+  margin-bottom: 12px;
+}
+/* ===== IM Layout ===== */
+.im-layout{
+  display:flex;
+  height: min(72vh, 720px);
+  min-height: 520px;
+}
+@media (max-width: 1024px){
+  .brandbar{
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .brandbar .row{
+    width: 100%;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .im-layout{
+    flex-direction: column;
+    height: auto;
+    min-height: 70vh;
+  }
+  .im-sidebar{
+    width: 100%;
+    min-height: 74vh;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .im-main{
+    min-height: 70vh;
+  }
+  .im-list{ max-height: none; }
+  #friendList{ flex: 0 0 auto; max-height: 28vh; }
+  #groupList{ flex: 0 0 auto; max-height: 24vh; }
+  #requestList{ flex: 0 0 auto; max-height: 20vh; }
+  .im-chat-header .row{
+    gap: 6px;
+  }
+  .im-chat-input .row{
+    gap: 6px;
+  }
+  .im-chat-input input{
+    min-width: 0;
+  }
+  .im-chat-input{
+    position: sticky;
+    bottom: 0;
+  }
+  .im-chat-body{
+    min-height: 45vh;
+  }
+  .im-sidebar.hidden{
+    display:none;
+  }
+}
+
+  .im-sidebar{
+    width: 260px;
+    border-right: 1px solid var(--border);
+    background: #f7f8fb;
+    display:flex;
+    flex-direction: column;
+  }
+
+.im-sidebar-header{
+  padding: 10px;
+  display:flex;
+  justify-content: space-between;
+  align-items:center;
+  font-weight:700;
+}
+
+.im-list{
+  flex:1;
+  overflow-y:auto;
+}
+#friendList{ flex: 0 0 auto; max-height: 240px; }
+#groupList{ flex: 0 0 auto; max-height: 200px; }
+#requestList{ flex: 0 0 auto; max-height: 180px; }
+
+  .im-item{
+    padding: 10px;
+    cursor:pointer;
+    border-bottom: 1px solid var(--border);
+    transition: background .15s ease, border-color .15s ease;
+  }
+  .im-item:hover{
+    background: #eef2f7;
+  }
+  .im-item.active{
+    background: rgba(42,124,247,.10);
+    border-left: 3px solid rgba(42,124,247,.9);
+  }
+  .unread-dot{
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ef4444;
+    display: inline-block;
+    margin-right: 8px;
+    flex: 0 0 auto;
+  }
+  .unread-badge{
+    min-width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    background: #ef4444;
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 6px;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+    margin-right: 8px;
+    flex: 0 0 auto;
+  }
+
+  .im-main{
+    flex:1;
+    display:flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: stretch;
+    background:
+    radial-gradient(800px 320px at 85% 0%, rgba(42,124,247,.08), transparent 60%),
+    #f8fafc;
+  }
+
+  .im-chat-header{
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+  }
+.im-chat-title{
+  font-weight: 700;
+}
+.im-chat-sub{
+  font-size: 12px;
+  color: var(--muted2);
+  margin-top: 2px;
+}
+.im-chat-hint{
+  min-height: 16px;
+  margin-top: 4px;
+  font-size: 12px;
+  color: #2a7cf7;
+}
+.im-chat-hint.err{
+  color: #ef4444;
+}
+.im-chat-body{
+  flex:1;
+  overflow-y:auto;
+  padding: 12px;
+}
+  .im-chat-input{
+    border-top:1px solid var(--border);
+    padding:10px;
+    background: #fff;
+    position: relative;
+  }
+.im-empty{
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color: var(--muted2);
+  font-size: 14px;
+}
+.msg{max-width:70%;padding:8px;border-radius:12px;margin:6px}
+.msg.me{margin-left:auto;background:#2a7cf7;color:#fff}
+.msg.peer{background:#e9edf3;color:#0f172a}
+.msg img{max-width:100%;border-radius:8px}
+.msg.me .muted{color: rgba(255,255,255,.88);}
+.msg.peer .muted{color: #64748b;}
+.upload-box{display:flex;flex-direction:column;gap:6px}
+.upload-title{font-weight:600}
+.upload-bar{height:6px;border-radius:999px;background:rgba(255,255,255,.25);overflow:hidden}
+.msg.peer .upload-bar{background:rgba(15,23,42,.12)}
+.upload-bar-fill{height:100%;width:0%;background:#ffffff;transition:width .12s ease}
+.msg.peer .upload-bar-fill{background:#2a7cf7}
+.upload-meta{font-size:12px}
+
+.emoji-panel{
+  position:absolute;
+  bottom:54px;
+  left:10px;
+  width: 320px;
+  max-height: 260px;
+  overflow-y:auto;
+  background: rgba(12,16,28,.98);
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 12px;
+  box-shadow: 0 18px 50px rgba(0,0,0,.35);
+  padding: 10px;
+  z-index: 10;
+}
+.emoji-grid{
+  display:grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 6px;
+}
+.emoji-btn{
+  appearance:none;
+  border:none;
+  background: transparent;
+  cursor:pointer;
+  font-size: 20px;
+  line-height: 1;
+  padding: 6px;
+  border-radius: 8px;
+}
+.emoji-btn:hover{
+  background: rgba(255,255,255,.08);
+}
+
+</style>
+</head>
+
+<body>
+<div class="toast-wrap" id="toastWrap"></div>
+<div id="serverSetup" class="server-setup hidden">
+  <div class="card panel">
+    <div class="title">
+      <h2>服务器配置</h2>
+      <span class="hint">首次进入需要填写</span>
+    </div>
+    <label>
+      服务器 IP / 域名
+      <input id="serverHost" type="text" placeholder="例如：42.51.13.120">
+    </label>
+    <div class="row">
+      <label style="flex:1">
+        HTTP 端口
+        <input id="serverHttpPort" type="number" min="1" max="65535" value="8080">
+      </label>
+      <label style="flex:1">
+        WS 端口
+        <input id="serverWsPort" type="number" min="1" max="65535" value="5050">
+      </label>
+    </div>
+    <div class="row" style="margin-top:10px;">
+      <button class="btn primary" id="btnSaveServerConfig" type="button">保存并进入</button>
+      <button class="btn ghost" id="btnResetServerConfig" type="button">恢复默认</button>
+      <button class="btn ghost hidden" id="btnCancelServerConfig" type="button">取消</button>
+      <span class="muted" id="serverCfgHint"></span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ========== 登录视图 ========== -->
+  <div id="viewLogin">
+    <div class="brandbar">
+      <div class="brand">
+        <div class="logo"></div>
+        <div>
+          <h1>STT Veil</h1>
+          <div class="sub">安全聊天</div>
+        </div>
+      </div>
+      <div class="row">
+        <span class="pill" title="WebSocket 状态">
+          <span id="wsDot" class="dot bad"></span>
+          <span id="wsState">未连接</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <div class="title">
+          <h2>登录</h2>
+          <span class="hint">请输入账号和密码</span>
+        </div>
+
+        <form id="loginForm">
+          <label>
+            用户名
+            <input id="username" type="text" required autocomplete="username" placeholder="输入用户名" />
+          </label>
+
+          <label>
+            密码
+            <div class="pw-wrapper">
+              <input id="password" type="password" required autocomplete="current-password" placeholder="输入密码" />
+              <span id="togglePw" class="toggle-eye">👁</span>
+            </div>
+            <div class="muted" style="margin-top:6px;">请确保账号密码正确。</div>
+          </label>
+
+          <button class="btn primary full" type="submit" style="margin-top:12px;">登录</button>
+
+          <div id="status" class="muted" style="margin-top:10px;"></div>
+        </form>
+      </div>
+
+      <div class="card soft">
+        <div class="row" style="justify-content: space-between; align-items:center;">
+          <div class="muted">
+            没有账号？
+            <a id="linkRegister" href="#">去注册</a>
+          </div>
+          <div class="row" style="gap:8px;">
+            <button class="btn ghost" id="btnServerConfigLogin" type="button">服务器设置</button>
+            <button class="btn ghost" id="btnReconnect" type="button">手动重连 WS</button>
+          </div>
+        </div>
+        <div class="muted" style="margin-top:10px;">
+          <a href="resources/introduction.html" style="color:var(--primary); font-size:inherit;">软件介绍</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 主页视图 ========== -->
+  <!-- ========== 主页视图（IM 主界面） ========== -->
+<div id="viewHome" class="hidden">
+
+  <!-- 顶栏 -->
+  <div class="brandbar">
+    <div class="brand">
+      <div class="logo"></div>
+      <div>
+        <h1>STT Veil</h1>
+        <div class="sub">你的隐私，只属于你。</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <span class="pill" title="WebSocket 状态">
+        <span id="wsDotHome" class="dot bad"></span>
+        <span id="homeWs">WS：-</span>
+      </span>
+
+      <!-- ⭐ 新增：设置按钮 -->
+      <button class="btn ghost" id="btnSettings">⚙ 设置</button>
+      <button class="btn ghost" id="btnReconnectHome" type="button">重连</button>
+
+      <button class="btn" id="btnLogout" type="button">退出</button>
+    </div>
+  </div>
+
+  <!-- IM 主区域 -->
+  <div class="card" style="padding:0; overflow:hidden;">
+    <div class="im-layout">
+  
+      <!-- 左侧：好友 / 会话列表 -->
+      <div class="im-sidebar">
+        <div class="im-sidebar-header">
+          <span>好友</span>
+          <button class="btn ghost" id="btnAddFriend">＋</button>
+        </div>
+      
+        <div id="friendList" class="im-list"></div>
+
+        <div class="sep"></div>
+        <div class="im-sidebar-header">
+          <span>群组</span>
+          <div class="row" style="gap:6px;">
+            <button class="btn ghost btn-sm" id="btnSearchGroup">搜索</button>
+            <button class="btn ghost btn-sm" id="btnAddGroup">建群</button>
+          </div>
+        </div>
+        <div id="groupList" class="im-list"></div>
+      
+        <div class="sep"></div>
+        <div class="muted" style="padding:8px;">好友请求</div>
+        <div id="requestList" class="im-list"></div>
+      </div>
+      
+  
+      <!-- 右侧：聊天区 -->
+      <div class="im-main" id="chatMain">
+        <div class="im-chat-header">
+          <div>
+            <div class="im-chat-title" id="chatTitle">未选择聊天</div>
+            <div class="im-chat-sub" id="chatSub">请选择一个好友开始聊天</div>
+            <div class="im-chat-sub hidden" id="chatMembersLine"></div>
+            <div class="im-chat-hint" id="chatHistoryHint"></div>
+          </div>
+          <div class="row" style="gap:8px;">
+            <span class="pill" id="chatState">私聊</span>
+            <button class="btn ghost btn-sm hidden" id="btnGroupInvite" type="button">邀请</button>
+            <button class="btn ghost btn-sm hidden" id="btnGroupRemove" type="button">移除</button>
+            <button class="btn ghost btn-sm hidden" id="btnGroupLeave" type="button">退群</button>
+            <button class="btn ghost btn-sm hidden" id="btnCloseChat" type="button">✕</button>
+          </div>
+        </div>
+
+        <div id="chatMessages" class="im-chat-body hidden"></div>
+        <div id="chatPlaceholder" class="im-empty">请选择一个好友开始聊天</div>
+      
+        <div id="chatInputArea" class="im-chat-input hidden">
+          <div class="row">
+            <input id="chatInput" placeholder="输入消息…" style="flex:1">
+            <button class="btn ghost" id="btnEmoji">😀</button>
+            <div id="emojiPanel" class="emoji-panel hidden"></div>
+            <input type="file" id="fileInput" hidden>
+            <button class="btn ghost" id="btnFile">📎</button>
+            <button class="btn primary" id="btnSend">发送</button>
+          </div>
+        </div>
+      </div>
+      
+  
+    </div>
+  </div>
+  
+
+</div>
+
+
+</div>
+<div id="groupInviteModal" class="settings hidden">
+  <div class="settings-mask"></div>
+  <div class="settings-panel" style="max-width:520px;">
+    <div class="settings-header">
+      <h2>邀请好友入群</h2>
+      <button class="btn ghost" id="btnCloseGroupInvite">✕</button>
+    </div>
+    <div id="groupInviteList" class="im-list" style="max-height:50vh;"></div>
+  </div>
+</div>
+<!-- ========== 设置抽屉 ========== -->
+<div id="settingsDrawer" class="settings hidden">
+  <div class="settings-mask"></div>
+
+  <div class="settings-panel">
+
+    <div class="settings-header">
+      <h2>设置</h2>
+      <button class="btn ghost" id="btnCloseSettings">✕</button>
+    </div>
+
+    <!-- ===== Profile ===== -->
+    <div class="card">
+      <div class="title">
+        <h2>个人资料</h2>
+        <span class="hint">头像 / 昵称</span>
+      </div>
+
+      <div class="row" style="align-items: center; gap: 14px;">
+        <img id="avatarImg" class="avatar" alt="avatar">
+        <div style="flex:1; min-width: 220px;">
+          <div class="row" style="justify-content: space-between;">
+            <span class="pill" id="homeUser">用户：-</span>
+        <span class="pill" id="homeKey">状态：-</span>
+          </div>
+          <div class="muted" style="margin-top:8px;">
+            退出会断开连接。
+          </div>
+        </div>
+      </div>
+
+      <div class="sep"></div>
+
+      <label>
+        昵称
+        <input id="displayName" type="text"
+               placeholder="比如：StephenTaam" maxlength="32">
+      </label>
+      <div class="row" style="margin-top:10px;">
+        <button class="btn primary" id="btnSaveProfile" type="button">
+          保存昵称
+        </button>
+        <span class="muted" id="profileHint"></span>
+      </div>
+
+      <div class="sep"></div>
+
+      <label>
+        修改头像
+        <input type="file" id="avatarFile" accept="image/*">
+      </label>
+      <div class="row" style="margin-top:10px;">
+        <button class="btn" id="btnUploadAvatar" type="button">
+          上传头像
+        </button>
+        <span class="muted" id="avatarHint"></span>
+      </div>
+    </div>
+
+    <!-- Right: Security + Danger -->
+    <div class="card soft">
+      <div class="title">
+        <h2>安全</h2>
+        <span class="hint">修改密码</span>
+      </div>
+
+      <details id="panelPassword">
+        <summary>
+          改密码
+          <span class="caret">▾</span>
+        </summary>
+
+        <div class="muted" style="margin-top:10px;">
+          提示：
+          <ul style="margin:6px 0 0 18px; padding:0;">
+            <li>请使用当前密码验证</li>
+            <li>新密码将立即生效</li>
+          </ul>
+        </div>
+
+        <label>
+          旧密码
+          <input id="oldPw" type="password" autocomplete="current-password" placeholder="输入旧密码">
+        </label>
+        <label>
+          新密码
+          <input id="newPw" type="password" autocomplete="new-password" placeholder="输入新密码（建议 10+ 位）">
+        </label>
+        <div class="muted" style="margin-top:6px;">
+          建议至少 16 位，包含大写/小写/数字/符号。
+        </div>
+        <ul id="cpRules" style="margin:6px 0 0 18px; padding:0; font-size:12px; color:var(--muted);">
+          <li id="cp-rule-length">❌ 长度至少 16 位</li>
+          <li id="cp-rule-lower">❌ 需要小写字母</li>
+          <li id="cp-rule-upper">❌ 需要大写字母</li>
+          <li id="cp-rule-digit">❌ 需要数字</li>
+          <li id="cp-rule-symbol">❌ 需要符号</li>
+        </ul>
+        <div id="cpStrength" class="muted" style="margin-top:6px;"></div>
+        <label>
+          确认新密码
+          <input id="newPw2" type="password" autocomplete="new-password" placeholder="再次输入新密码">
+        </label>
+
+        <div class="row" style="margin-top:10px;">
+          <button class="btn primary" id="btnChangePassword" type="button">提交改密码</button>
+          <span class="muted" id="pwHint"></span>
+        </div>
+      </details>
+
+      <div class="sep"></div>
+
+      <div class="title">
+        <h2>Danger Zone</h2>
+        <span class="hint">不可恢复</span>
+      </div>
+
+      <details id="panelDelete">
+        <summary>
+          注销账号（永久删除）
+          <span class="caret">▾</span>
+        </summary>
+
+        <div class="muted" style="margin-top:10px;">
+          此操作不可恢复，请谨慎。
+        </div>
+
+        <label>
+          输入密码确认
+          <input id="delPw" type="password" autocomplete="current-password" placeholder="输入当前密码">
+        </label>
+
+        <label>
+          二次确认（输入 DELETE）
+          <input id="delConfirm" type="text" placeholder="DELETE">
+        </label>
+
+        <div class="row" style="margin-top:10px;">
+          <button class="btn danger" id="btnDeleteAccount" type="button">确认注销账号</button>
+          <span class="muted" id="delHint"></span>
+        </div>
+      </details>
+
+      <div class="sep"></div>
+      <div class="muted">
+        连接信息：
+        <div class="row" style="margin-top:8px; gap:8px;">
+          <span class="pill" id="pillHttp">HTTP：-</span>
+          <span class="pill" id="pillWs">WS：-</span>
+        </div>
+        <div class="row" style="margin-top:10px;">
+          <button class="btn ghost" id="btnServerConfigInSettings" type="button">修改服务器配置</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<script>
+/* =====================================================
+   配置：你需要改这里
+===================================================== */
+const SERVER_CONFIG_KEY = "sttchat_server_config_v1";
+const DEFAULT_SERVER_HOST = "42.51.13.120";
+const DEFAULT_HTTP_PORT = 8080;
+const DEFAULT_WS_PORT = 5050;
+let HTTP_BASE = "";
+let WS_URL = "";
+const REGISTER_URL = "resources/signup.html";
+const FILE_UPLOAD_PATH = "/api/files/upload";
+/* =====================================================
+   密码学参数
+===================================================== */
+const PBKDF2_ITER_PWHASH = 200000;     // 登录 passwordHash 默认 iterations
+const PBKDF2_ITER_KEY_DEFAULT = 200000; // 若服务器没返回 iterations，就用这个
+const MIN_PASSWORD_LENGTH = 16;
+const textEncoder = new TextEncoder();
+
+/* =====================================================
+   Toast
+===================================================== */
+function toast(msg, type="ok", ms=3200){
+  const wrap = document.getElementById("toastWrap");
+  const el = document.createElement("div");
+  el.className = "toast " + (type === "err" ? "err" : (type === "warn" ? "warn" : "ok"));
+  el.innerHTML = `
+    <div class="badge"></div>
+    <div class="msg">${escapeHtml(msg)}</div>
+    <div class="x">✕</div>
+  `;
+  wrap.appendChild(el);
+  const rm = ()=>{ try{ el.remove(); }catch{} };
+  el.querySelector(".x").onclick = rm;
+  setTimeout(rm, ms);
+}
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, (c)=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+}
+
+/* =====================================================
+   全局状态（只放内存）
+===================================================== */
+let friendRequests = []; // [{username, display_name}]
+const sessionKeys = new Map(); // peer -> CryptoKey
+const groupPairKeys = new Map(); // `${username}\n${spki}` -> CryptoKey
+const pendingSendByTs = new Map(); // client ts -> pending meta
+const unreadDotMap = new Map(); // peer -> boolean
+const groupUnreadDotMap = new Map(); // group_id -> boolean
+const groupUnreadCountMap = new Map(); // group_id -> number
+const groupMemberPublicKeyMap = new Map(); // username -> spki(base64)
+const GROUP_LAST_READ_KEY = "sttchat_group_last_read_ts";
+const groupLastReadTsMap = new Map();
+
+function loadGroupLastReadTs(){
+  try{
+    const raw = localStorage.getItem(GROUP_LAST_READ_KEY);
+    if(!raw) return;
+    const obj = JSON.parse(raw);
+    if(!obj || typeof obj !== "object") return;
+    for(const [k, v] of Object.entries(obj)){
+      const ts = normalizeTsMs(v);
+      if(k && ts > 0) groupLastReadTsMap.set(groupKey(k), ts);
+    }
+  }catch{}
+}
+
+function saveGroupLastReadTs(){
+  try{
+    const out = {};
+    for(const [k, v] of groupLastReadTsMap.entries()){
+      out[k] = Number(v || 0);
+    }
+    localStorage.setItem(GROUP_LAST_READ_KEY, JSON.stringify(out));
+  }catch{}
+}
+
+function setGroupLastReadTs(groupId, ts){
+  const key = groupKey(groupId);
+  const t = normalizeTsMs(ts);
+  if(!key || t <= 0) return;
+  const prev = Number(groupLastReadTsMap.get(key) || 0);
+  if(t > prev){
+    groupLastReadTsMap.set(key, t);
+    saveGroupLastReadTs();
+  }
+}
+
+loadGroupLastReadTs();
+const latestTsByPeer = new Map(); // peer -> number
+
+let friends = []; // [{username, display_name, avatar_url}]
+let groups = []; // [{id,name,owner_username,member_count}]
+let groupSearchKeyword = "";
+let currentChat = null;
+let currentChatType = "none"; // none | friend | group
+
+let reconnectTimer = null;
+let reconnectDelay = 3000;
+let ws = null;
+let wsReady = false;
+let historyLoadToken = 0;
+
+let session = {
+  username: null,
+  displayName: null,
+  avatarUrl : null,
+  httpToken : null,
+  wsAuthed: false,
+  lastLogin: null, // { username, password } kept in memory only
+
+  // 登录 challenge 的 password hash 参数（后续改密码/注销用）
+  pwSaltB64: null,
+  pwIterations: null,
+
+  // 解密出的私钥（只在内存）
+  privateKeyPkcs8Bytes: null,  // Uint8Array
+  privateKeyCryptoKey: null,   // CryptoKey（可选）
+  publicKeySpkiBytes: null,    // Uint8Array（可选）
+  publicKeyCryptoKey: null
+};
+
+/* =====================================================
+   小工具
+===================================================== */
+const chatInput = document.getElementById("chatInput");
+const btnSend = document.getElementById("btnSend");
+const btnEmoji = document.getElementById("btnEmoji");
+const btnFile = document.getElementById("btnFile");
+const fileInput = document.getElementById("fileInput");
+const chatMessages = document.getElementById("chatMessages");
+const chatPlaceholder = document.getElementById("chatPlaceholder");
+const chatInputArea = document.getElementById("chatInputArea");
+const chatTitle = document.getElementById("chatTitle");
+const chatSub = document.getElementById("chatSub");
+const chatMembersLine = document.getElementById("chatMembersLine");
+const chatHistoryHint = document.getElementById("chatHistoryHint");
+const btnCloseChat = document.getElementById("btnCloseChat");
+const emojiPanel = document.getElementById("emojiPanel");
+const imSidebar = document.querySelector(".im-sidebar");
+const chatMain = document.getElementById("chatMain");
+const groupList = document.getElementById("groupList");
+const btnSearchGroup = document.getElementById("btnSearchGroup");
+const btnAddGroup = document.getElementById("btnAddGroup");
+const btnGroupInvite = document.getElementById("btnGroupInvite");
+const btnGroupRemove = document.getElementById("btnGroupRemove");
+const btnGroupLeave = document.getElementById("btnGroupLeave");
+const groupInviteModal = document.getElementById("groupInviteModal");
+const btnCloseGroupInvite = document.getElementById("btnCloseGroupInvite");
+const groupInviteList = document.getElementById("groupInviteList");
+const btnReconnectHome = document.getElementById("btnReconnectHome");
+const newPwInput = document.getElementById("newPw");
+const serverSetup = document.getElementById("serverSetup");
+const serverHostInput = document.getElementById("serverHost");
+const serverHttpPortInput = document.getElementById("serverHttpPort");
+const serverWsPortInput = document.getElementById("serverWsPort");
+const btnSaveServerConfig = document.getElementById("btnSaveServerConfig");
+const btnCancelServerConfig = document.getElementById("btnCancelServerConfig");
+const btnResetServerConfig = document.getElementById("btnResetServerConfig");
+const serverCfgHint = document.getElementById("serverCfgHint");
+const btnServerConfigLogin = document.getElementById("btnServerConfigLogin");
+const btnServerConfigInSettings = document.getElementById("btnServerConfigInSettings");
+
+function buildServerUrls(cfg){
+  return {
+    httpBase: `https://${cfg.host}:${cfg.httpPort}`,
+    wsUrl: `wss://${cfg.host}:${cfg.wsPort}`
+  };
+}
+
+function sanitizeServerHost(raw){
+  let host = String(raw || "").trim();
+  host = host.replace(/^[a-zA-Z]+:\/\//, "");
+  const slashPos = host.indexOf("/");
+  if(slashPos >= 0) host = host.slice(0, slashPos);
+  host = host.trim();
+  if(!host) return "";
+  const m = host.match(/^(.+):(\d+)$/);
+  if(m && !host.startsWith("[")) host = m[1];
+  return host;
+}
+
+function normalizeServerConfig(cfg){
+  const host = sanitizeServerHost(cfg?.host || "");
+  const httpPort = Number(cfg?.httpPort || DEFAULT_HTTP_PORT);
+  const wsPort = Number(cfg?.wsPort || DEFAULT_WS_PORT);
+  if(!host) return null;
+  if(!Number.isInteger(httpPort) || httpPort < 1 || httpPort > 65535) return null;
+  if(!Number.isInteger(wsPort) || wsPort < 1 || wsPort > 65535) return null;
+  return { host, httpPort, wsPort };
+}
+
+function loadServerConfig(){
+  try{
+    const raw = localStorage.getItem(SERVER_CONFIG_KEY);
+    if(!raw) return null;
+    return normalizeServerConfig(JSON.parse(raw));
+  }catch{
+    return null;
+  }
+}
+
+function saveServerConfig(cfg){
+  localStorage.setItem(SERVER_CONFIG_KEY, JSON.stringify(cfg));
+}
+
+function applyServerConfig(cfg){
+  const urls = buildServerUrls(cfg);
+  HTTP_BASE = urls.httpBase;
+  WS_URL = urls.wsUrl;
+}
+
+function ensureServerConfig(){
+  const cfg = loadServerConfig();
+  if(cfg){
+    applyServerConfig(cfg);
+    if(serverSetup) serverSetup.classList.add("hidden");
+    return true;
+  }
+  if(serverSetup) serverSetup.classList.remove("hidden");
+  return false;
+}
+
+function fillServerConfigInputs(){
+  const cfg = loadServerConfig();
+  if(cfg){
+    if(serverHostInput) serverHostInput.value = cfg.host;
+    if(serverHttpPortInput) serverHttpPortInput.value = String(cfg.httpPort);
+    if(serverWsPortInput) serverWsPortInput.value = String(cfg.wsPort);
+  }else{
+    if(serverHostInput) serverHostInput.value = DEFAULT_SERVER_HOST;
+    if(serverHttpPortInput) serverHttpPortInput.value = String(DEFAULT_HTTP_PORT);
+    if(serverWsPortInput) serverWsPortInput.value = String(DEFAULT_WS_PORT);
+  }
+}
+
+function openServerSetup(){
+  fillServerConfigInputs();
+  const hasCfg = !!loadServerConfig();
+  if(btnCancelServerConfig){
+    btnCancelServerConfig.classList.toggle("hidden", !hasCfg);
+  }
+  if(serverCfgHint) serverCfgHint.textContent = "";
+  if(serverSetup) serverSetup.classList.remove("hidden");
+}
+
+function isMobileView(){
+  return !!(window.matchMedia && window.matchMedia("(max-width: 1024px)").matches);
+}
+
+function peerKey(name){
+  return String(name || "").toLowerCase();
+}
+
+function groupKey(id){
+  return String(id || "").trim();
+}
+
+function updateGroupEpochLocal(groupId, epoch){
+  const gid = Number(groupId || 0);
+  const ep = Number(epoch || 0);
+  if(!gid || !ep) return;
+  for(const g of groups){
+    if(Number(g?.id) === gid){
+      g.key_epoch = ep;
+      break;
+    }
+  }
+  if(currentChatType === "group" && currentChat && Number(currentChat.id) === gid){
+    currentChat.key_epoch = ep;
+  }
+}
+
+function normalizeTsMs(ts){
+  const n = Number(ts || 0);
+  if(!Number.isFinite(n) || n <= 0) return 0;
+  // 10-digit seconds -> milliseconds
+  if(n < 100000000000) return Math.floor(n * 1000);
+  return Math.floor(n);
+}
+
+function utf8ToHex(str){
+  const bytes = new TextEncoder().encode(String(str || ""));
+  let out = "";
+  for(const b of bytes){
+    out += b.toString(16).padStart(2, "0");
+  }
+  return out;
+}
+
+function isChatOpenFor(peer){
+  return !!(currentChat && peerKey(currentChat.username) === peerKey(peer));
+}
+
+function markUnread(peer, hasUnread){
+  const key = peerKey(peer);
+  if(!key) return;
+  unreadDotMap.set(key, !!hasUnread);
+}
+
+function clearUnread(peer){
+  markUnread(peer, false);
+}
+
+function markGroupUnread(groupId, hasUnread){
+  const key = groupKey(groupId);
+  if(!key) return;
+  groupUnreadDotMap.set(key, !!hasUnread);
+  if(!hasUnread){
+    groupUnreadCountMap.set(key, 0);
+  }else if(!groupUnreadCountMap.has(key)){
+    groupUnreadCountMap.set(key, 1);
+  }
+}
+
+function bumpGroupUnread(groupId, delta = 1){
+  const key = groupKey(groupId);
+  if(!key) return;
+  const prev = Number(groupUnreadCountMap.get(key) || 0);
+  const next = Math.max(0, prev + Math.max(1, Number(delta) || 1));
+  groupUnreadCountMap.set(key, next);
+  groupUnreadDotMap.set(key, next > 0);
+}
+
+function clearGroupUnread(groupId){
+  markGroupUnread(groupId, false);
+}
+
+function getLatestTs(peer){
+  return latestTsByPeer.get(peerKey(peer)) || 0;
+}
+
+function updateLatestTs(peer, ts){
+  const key = peerKey(peer);
+  const n = normalizeTsMs(ts);
+  if(!key || !Number.isFinite(n) || n <= 0) return;
+  const prev = latestTsByPeer.get(key) || 0;
+  if(n > prev) latestTsByPeer.set(key, n);
+}
+
+function sendReadReceipt(peer, ts){
+  const lastReadTs = normalizeTsMs(ts);
+  if(!peer || !lastReadTs) return;
+  if(!ws || ws.readyState !== WebSocket.OPEN || !session.wsAuthed) return;
+  try{
+    ws.send(JSON.stringify({
+      type: "chat_read",
+      peer,
+      last_read_ts: lastReadTs
+    }));
+  }catch{}
+}
+
+function setChatHistoryHint(text, isErr=false){
+  if(!chatHistoryHint) return;
+  chatHistoryHint.textContent = text || "";
+  chatHistoryHint.classList.toggle("err", !!isErr);
+}
+
+function isActiveHistoryLoad(peer, token){
+  if(token !== historyLoadToken || !currentChat) return false;
+  if(currentChatType === "friend"){
+    return peerKey(currentChat.username) === peerKey(peer);
+  }
+  if(currentChatType === "group"){
+    return String(currentChat.id) === String(peer);
+  }
+  return false;
+}
+
+function setMobilePane(mode){
+  if(!isMobileView()) {
+    if(imSidebar) imSidebar.classList.remove("hidden");
+    if(chatMain) chatMain.classList.remove("hidden");
+    return;
+  }
+  if(mode === "chat"){
+    if(imSidebar) imSidebar.classList.add("hidden");
+    if(chatMain) chatMain.classList.remove("hidden");
+    return;
+  }
+  if(imSidebar) imSidebar.classList.remove("hidden");
+  if(chatMain) chatMain.classList.add("hidden");
+}
+
+async function sendEncrypted(kind,data,meta={}){
+ if(!currentChat || !currentChat.username) throw new Error("no current chat");
+ if(!ws || ws.readyState !== WebSocket.OPEN) throw new Error("ws not connected");
+
+ const key = await resolveSessionKey(currentChat.username);
+ const iv=getRandomBytes(12);
+
+ const ct=await crypto.subtle.encrypt({name:"AES-GCM",iv},key,data);
+ const clientTs = Date.now();
+ pendingSendByTs.set(String(clientTs), {
+  to: currentChat.username,
+  kind
+ });
+
+ ws.send(JSON.stringify({
+  type:"chat_send",
+  to:currentChat.username,
+  ts: clientTs,
+  payload:{
+   kind,
+   ...meta,
+   iv:bufToBase64(iv),
+   ciphertext:bufToBase64(ct)
+  }
+ }));
+
+ // local echo so sender sees the message even if server does not echo back
+ try{
+  renderMessage(session.username, kind, data, meta, clientTs, currentChat?.username);
+ }catch{}
+}
+
+async function resolveSessionKey(peer){
+ let key=sessionKeys.get(peer);
+ if(key && typeof key.then === "function"){
+  key = await key;
+  sessionKeys.set(peer, key);
+ }
+ if(!key) throw new Error("missing session key");
+ if(typeof CryptoKey !== "undefined" && !(key instanceof CryptoKey)){
+  throw new Error("invalid session key");
+ }
+ return key;
+}
+
+async function sha256Base64(bytes){
+ const digest = await crypto.subtle.digest("SHA-256", bytes);
+ return bufToBase64(new Uint8Array(digest));
+}
+
+async function uploadEncryptedFile(ciphertextBytes, meta){
+ const body = {
+  to: meta.to || currentChat?.username || "",
+  kind: meta.kind || "file",
+  name: meta.name || "",
+  mime: meta.mime || "application/octet-stream",
+  size: meta.size || ciphertextBytes.byteLength,
+  iv: meta.iv || "",
+  hash: meta.sha256 || "",
+  ciphertext: bufToBase64(ciphertextBytes)
+ };
+ return await uploadEncryptedFileWithProgress(body, meta.onProgress);
+}
+
+function uploadEncryptedFileWithProgress(body, onProgress){
+ return new Promise((resolve, reject)=>{
+  const xhr = new XMLHttpRequest();
+  xhr.open("POST", HTTP_BASE + FILE_UPLOAD_PATH, true);
+  xhr.setRequestHeader("Content-Type", "application/json");
+  if(session.httpToken){
+    xhr.setRequestHeader("Authorization", "Bearer " + session.httpToken);
+  }
+  if(xhr.upload && typeof onProgress === "function"){
+    xhr.upload.onprogress = (e)=>{
+      if(e.lengthComputable){
+        onProgress(e.loaded / e.total);
+      }
+    };
+  }
+  xhr.onload = ()=>{
+    if(xhr.status < 200 || xhr.status >= 300){
+      reject(new Error("upload failed: http " + xhr.status));
+      return;
+    }
+    let j = null;
+    try{ j = JSON.parse(xhr.responseText); }catch{}
+    if(!j || !j.success){
+      reject(new Error(j?.error || "upload failed"));
+      return;
+    }
+    resolve(j);
+  };
+  xhr.onerror = ()=>reject(new Error("upload failed"));
+  xhr.send(JSON.stringify(body));
+ });
+}
+
+function createUploadProgress(kind, meta){
+ const div = document.createElement("div");
+ div.className = "msg me";
+ const label = (kind === "image") ? "图片" : "文件";
+ const safeName = escapeHtml(meta?.name || "");
+ div.innerHTML = `
+  <div class="upload-box">
+    <div class="upload-title">${label}${safeName ? " · " + safeName : ""}</div>
+    <div class="upload-bar"><div class="upload-bar-fill"></div></div>
+    <div class="upload-meta muted">0%</div>
+  </div>
+ `;
+ chatMessages.appendChild(div);
+ chatMessages.scrollTop = chatMessages.scrollHeight;
+ const fill = div.querySelector(".upload-bar-fill");
+ const metaEl = div.querySelector(".upload-meta");
+ return {
+  el: div,
+  setProgress(p){
+    const pct = Math.max(0, Math.min(100, Math.round(p * 100)));
+    if(fill) fill.style.width = pct + "%";
+    if(metaEl) metaEl.textContent = pct + "%";
+  },
+  setError(msg){
+    if(metaEl) metaEl.textContent = msg || "上传失败";
+  },
+  remove(){
+    try{ div.remove(); }catch{}
+  }
+ };
+}
+
+async function sendFileReference(kind, plainBytes, meta){
+ if(!currentChat || !currentChat.username) throw new Error("no current chat");
+ if(!ws || ws.readyState !== WebSocket.OPEN) throw new Error("ws not connected");
+
+ const key = await resolveSessionKey(currentChat.username);
+  const iv = getRandomBytes(12);
+ const ct = await crypto.subtle.encrypt({name:"AES-GCM",iv}, key, plainBytes);
+ const ciphertextBytes = new Uint8Array(ct);
+ const sha256 = await sha256Base64(ciphertextBytes);
+
+ const progress = createUploadProgress(kind, meta);
+ let uploadRes;
+ try{
+  uploadRes = await uploadEncryptedFile(ciphertextBytes, {
+    ...meta,
+    kind,
+    iv: bufToBase64(iv),
+    sha256,
+    onProgress: (p)=>progress.setProgress(p)
+  });
+ }catch(e){
+  progress.setError("上传失败");
+  throw e;
+ }
+ if(!uploadRes.file_url){
+  progress.setError("上传失败");
+  throw new Error("upload response missing file reference");
+ }
+
+ const clientTs = Date.now();
+ pendingSendByTs.set(String(clientTs), {
+  to: currentChat.username,
+  kind
+ });
+
+ ws.send(JSON.stringify({
+  type: "chat_send",
+  to: currentChat.username,
+  ts: clientTs,
+  payload: {
+   kind,
+   mime: meta.mime || "application/octet-stream",
+   name: meta.name || "",
+   size: meta.size || plainBytes.length || plainBytes.byteLength || 0,
+   iv: bufToBase64(iv),
+   file_url: uploadRes.file_url,
+   hash: sha256
+  }
+ }));
+
+ progress.remove();
+ renderMessage(session.username, kind, plainBytes, {
+  mime: meta.mime,
+  name: meta.name,
+  size: meta.size
+ }, clientTs, currentChat?.username);
+}
+
+function getSessionPublicSpkiB64(){
+  if(!session.publicKeySpkiBytes) return "";
+  return bufToBase64(session.publicKeySpkiBytes);
+}
+
+async function ensureGroupMemberKeys(groupId){
+  const members = await fetchGroupMembers(groupId);
+  for(const m of members){
+    const uname = String(m?.username || "").trim();
+    const spki = String(m?.public_key?.spki || "").trim();
+    if(uname && spki){
+      groupMemberPublicKeyMap.set(uname, spki);
+    }
+  }
+  return members;
+}
+
+async function resolveUserAesKeyBySpki(username, spkiB64){
+  const cacheKey = `${String(username || "").toLowerCase()}\n${String(spkiB64 || "")}`;
+  let key = groupPairKeys.get(cacheKey);
+  if(key && typeof key.then === "function"){
+    key = await key;
+    groupPairKeys.set(cacheKey, key);
+  }
+  if(key instanceof CryptoKey) return key;
+  if(!spkiB64) throw new Error("missing public key for " + username);
+  key = await deriveSessionKey(spkiB64);
+  groupPairKeys.set(cacheKey, key);
+  return key;
+}
+
+async function encryptGroupEnvelope(plainBytes){
+  const groupMsgKey = await crypto.subtle.generateKey(
+    {name:"AES-GCM", length:256},
+    true,
+    ["encrypt","decrypt"]
+  );
+  const rawGroupMsgKey = new Uint8Array(await crypto.subtle.exportKey("raw", groupMsgKey));
+  const msgIv = getRandomBytes(12);
+  const msgCt = new Uint8Array(await crypto.subtle.encrypt(
+    {name:"AES-GCM", iv: msgIv},
+    groupMsgKey,
+    plainBytes
+  ));
+
+  const members = await ensureGroupMemberKeys(Number(currentChat.id));
+  const keyWrapMap = {};
+  for(const m of members){
+    const uname = String(m?.username || "").trim();
+    if(!uname) continue;
+    const spki = String(m?.public_key?.spki || groupMemberPublicKeyMap.get(uname) || "").trim();
+    if(!spki) continue;
+    const pairKey = await resolveUserAesKeyBySpki(uname, spki);
+    const wrapIv = getRandomBytes(12);
+    const wrapped = new Uint8Array(await crypto.subtle.encrypt(
+      {name:"AES-GCM", iv: wrapIv},
+      pairKey,
+      rawGroupMsgKey
+    ));
+    keyWrapMap[uname] = {
+      iv: bufToBase64(wrapIv),
+      wrapped_key: bufToBase64(wrapped)
+    };
+  }
+
+  return {
+    iv: bufToBase64(msgIv),
+    ciphertextBytes: msgCt,
+    wrappedKeys: keyWrapMap
+  };
+}
+
+async function sendGroupText(text){
+  if(currentChatType !== "group" || !currentChat || !currentChat.id){
+    throw new Error("no current group");
+  }
+  if(!ws || ws.readyState !== WebSocket.OPEN){
+    throw new Error("ws not connected");
+  }
+
+  const plainBytes = strToUint8(text);
+  const env = await encryptGroupEnvelope(plainBytes);
+  const ts = Date.now();
+  ws.send(JSON.stringify({
+    type: "group_send",
+    group_id: Number(currentChat.id),
+    key_epoch: Number(currentChat.key_epoch || 1),
+    ts,
+    payload: {
+      kind: "text",
+      mime: "text/plain",
+      size: plainBytes.length,
+      iv: env.iv,
+      ciphertext: bufToBase64(env.ciphertextBytes),
+      keys: env.wrappedKeys,
+      sender_spki: getSessionPublicSpkiB64()
+    }
+  }));
+  renderGroupMessage(session.username, text, ts);
+}
+
+async function sendGroupFileReference(kind, plainBytes, meta){
+  if(currentChatType !== "group" || !currentChat || !currentChat.id){
+    throw new Error("no current group");
+  }
+  if(!ws || ws.readyState !== WebSocket.OPEN){
+    throw new Error("ws not connected");
+  }
+
+  const env = await encryptGroupEnvelope(plainBytes);
+  const sha256 = await sha256Base64(env.ciphertextBytes);
+  const progress = createUploadProgress(kind, meta);
+  let uploadRes;
+  try{
+    uploadRes = await uploadEncryptedFile(env.ciphertextBytes, {
+      ...meta,
+      to: `group:${currentChat.id}`,
+      kind,
+      iv: env.iv,
+      sha256,
+      onProgress: (p)=>progress.setProgress(p)
+    });
+  }catch(e){
+    progress.setError("上传失败");
+    throw e;
+  }
+  if(!uploadRes.file_url){
+    progress.setError("上传失败");
+    throw new Error("upload response missing file reference");
+  }
+
+  const ts = Date.now();
+  ws.send(JSON.stringify({
+    type: "group_send",
+    group_id: Number(currentChat.id),
+    key_epoch: Number(currentChat.key_epoch || 1),
+    ts,
+    payload: {
+      kind,
+      mime: meta.mime || "application/octet-stream",
+      name: meta.name || "",
+      size: meta.size || plainBytes.length || plainBytes.byteLength || 0,
+      iv: env.iv,
+      hash: sha256,
+      file_url: uploadRes.file_url,
+      keys: env.wrappedKeys,
+      sender_spki: getSessionPublicSpkiB64()
+    }
+  }));
+  progress.remove();
+  renderGroupBinary(session.username, kind, plainBytes, meta, ts);
+}
+
+
+btnSend.onclick=async()=>{
+ try{
+  const text = (chatInput.value || "").trim();
+  if(!text) return;
+  if(currentChatType === "group"){
+    await sendGroupText(text);
+  }else{
+    await sendEncrypted("text",strToUint8(text),{
+      mime:"text/plain",
+      size:text.length
+    });
+  }
+  chatInput.value="";
+ }catch(err){
+  toast("发送失败：" + (err.message || err), "err");
+ }
+};
+
+
+chatInput.addEventListener("keydown", async (e)=>{
+  if(e.key === "Enter"){
+    e.preventDefault();
+    btnSend.click();
+  }
+});
+
+const EMOJIS = [
+  "😀","😁","😂","🤣","😅","😊","😍","😘",
+  "😎","🤔","😴","😮","😢","😭","😡","🤯",
+  "👍","👎","🙏","👏","🔥","✨","💯","🎉",
+  "❤️","🧡","💛","💚","💙","💜","🖤","🤍",
+  "😺","😸","😹","😻","😼","🙈","🙉","🙊",
+  "☕","🍔","🍟","🍕","🍜","🍣","🍰","🍩"
+];
+
+function buildEmojiPanel(){
+  if(!emojiPanel) return;
+  emojiPanel.innerHTML = "";
+  const grid = document.createElement("div");
+  grid.className = "emoji-grid";
+  for(const em of EMOJIS){
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "emoji-btn";
+    b.textContent = em;
+    b.onclick = ()=>{
+      chatInput.value += em;
+      chatInput.focus();
+    };
+    grid.appendChild(b);
+  }
+  emojiPanel.appendChild(grid);
+}
+
+function toggleEmojiPanel(show){
+  if(!emojiPanel) return;
+  if(show === undefined){
+    emojiPanel.classList.toggle("hidden");
+  }else{
+    emojiPanel.classList.toggle("hidden", !show);
+  }
+}
+
+btnEmoji.onclick = (e)=>{
+  e.stopPropagation();
+  buildEmojiPanel();
+  toggleEmojiPanel();
+};
+
+if (btnCloseChat){
+  btnCloseChat.onclick = ()=>{
+    clearChatSelection();
+  };
+}
+
+if(newPwInput){
+  newPwInput.addEventListener("input", (e)=>{
+    updateChangePwIndicators(e.target.value || "");
+  });
+  updateChangePwIndicators(newPwInput.value || "");
+}
+
+btnFile.onclick = ()=> fileInput.click();
+
+document.addEventListener("click", (e)=>{
+  if(!emojiPanel) return;
+  if(emojiPanel.classList.contains("hidden")) return;
+  if(e.target === btnEmoji || emojiPanel.contains(e.target)) return;
+  toggleEmojiPanel(false);
+});
+
+fileInput.onchange=async()=>{
+ const f=fileInput.files[0];
+ if(!f) return;
+ const buf=await f.arrayBuffer();
+
+ try{
+  const kind = f.type.startsWith("image") ? "image" : "file";
+  if(currentChatType === "group"){
+    await sendGroupFileReference(
+      kind,
+      new Uint8Array(buf),
+      {mime: f.type || "application/octet-stream", name: f.name, size: f.size}
+    );
+  }else{
+    await sendFileReference(
+      kind,
+      new Uint8Array(buf),
+      {mime: f.type || "application/octet-stream", name: f.name, size: f.size}
+    );
+  }
+  fileInput.value = "";
+ }catch(err){
+  toast("发送失败：" + (err.message || err), "err");
+ }
+};
+
+function handleChatSendAck(msg){
+  const key =
+    msg.client_ts !== undefined ? String(msg.client_ts) :
+    (msg.ts !== undefined ? String(msg.ts) : null);
+
+  if(msg.success){
+    if(key) pendingSendByTs.delete(key);
+    return;
+  }
+
+  if(key) pendingSendByTs.delete(key);
+  toast("发送失败：" + (msg.error || "unknown_error"), "err");
+}
+
+
+async function handleIncomingMessage(msg){
+  console.log("[history] incoming", msg);
+  const peer = msg.peer || ((msg.from === session.username) ? currentChat?.username : msg.from);
+  const keyOwner = (msg.from === session.username) ? peer : msg.from;
+  if(!keyOwner) throw new Error("missing key owner");
+  const key = await resolveSessionKey(keyOwner);
+  console.log("[history] key resolved", keyOwner);
+  let ciphertextBytes;
+  if(msg.payload.ciphertext){
+    ciphertextBytes = base64ToBytes(msg.payload.ciphertext);
+    console.log("[history] inline ciphertext bytes", ciphertextBytes.length);
+  }else{
+    ciphertextBytes = await downloadEncryptedFile(msg.payload);
+    console.log("[history] downloaded ciphertext bytes", ciphertextBytes.length);
+  }
+  const pt = await crypto.subtle.decrypt(
+    {name:"AES-GCM",iv:base64ToBytes(msg.payload.iv)},
+    key,
+    ciphertextBytes
+  );
+  console.log("[history] decrypt ok", { from: msg.from, kind: msg.payload.kind });
+
+  renderMessage(
+    msg.from,
+    msg.payload.kind,
+    new Uint8Array(pt),
+    msg.payload,
+    msg.ts,
+    peer
+  );
+
+}
+
+async function downloadEncryptedFile(payload){
+  async function normalizeCipherBytes(rawBytes){
+    if(!payload.hash) return rawBytes;
+    const rawHash = await sha256Base64(rawBytes);
+    if(rawHash === payload.hash) return rawBytes;
+
+    try{
+      const text = new TextDecoder().decode(rawBytes).trim();
+
+      // JSON envelope: {"ciphertext":"base64", ...}
+      if(text.startsWith("{") && text.endsWith("}")){
+        const obj = JSON.parse(text);
+        if(typeof obj?.ciphertext === "string"){
+          const decoded = base64ToBytes(obj.ciphertext.replace(/\s+/g, ""));
+          const decodedHash = await sha256Base64(decoded);
+          if(!payload.hash || decodedHash === payload.hash) return decoded;
+        }
+      }
+
+      // Plain base64 text
+      if(/^[A-Za-z0-9+/=\r\n]+$/.test(text)){
+        const decoded = base64ToBytes(text.replace(/\s+/g, ""));
+        const decodedHash = await sha256Base64(decoded);
+        if(decodedHash === payload.hash) return decoded;
+      }
+    }catch{}
+
+    throw new Error("ciphertext hash mismatch");
+  }
+
+  if(!payload.file_url) throw new Error("missing file_url");
+
+  const url = payload.file_url.startsWith("/") ? (HTTP_BASE + payload.file_url) : payload.file_url;
+  const r = await fetch(url);
+  if(!r.ok) throw new Error("download failed: http " + r.status);
+  const rawBytes = new Uint8Array(await r.arrayBuffer());
+  return await normalizeCipherBytes(rawBytes);
+}
+
+function renderMessage(from,kind,data,meta,ts,peer){
+ console.log("[render] message", { from, kind, size: data?.length || 0, ts, peer });
+ updateLatestTs(peer || (from === session.username ? currentChat?.username : from), ts);
+ const div=document.createElement("div");
+ div.className="msg "+(from===session.username?"me":"peer");
+
+ const time = (ts !== undefined && ts !== null)
+   ? new Date(normalizeTsMs(ts))
+   : null;
+
+ if(kind==="text"){
+  div.textContent=new TextDecoder().decode(data);
+ }
+
+ if(kind==="image"){
+  const url=URL.createObjectURL(new Blob([data],{type:meta.mime}));
+  div.innerHTML=`<img src="${url}">`;
+ }
+
+ if(kind==="file"){
+  const url=URL.createObjectURL(new Blob([data],{type:meta.mime}));
+  div.innerHTML=`<a href="${url}" download="${meta.name}">📎 ${meta.name}</a>`;
+ }
+
+ if(time && !isNaN(time.getTime())){
+  const t = document.createElement("div");
+  t.className = "muted";
+  t.style.marginTop = "4px";
+  t.textContent = time.toLocaleString();
+  div.appendChild(t);
+ }
+
+ chatMessages.appendChild(div);
+ chatMessages.scrollTop=chatMessages.scrollHeight;
+}
+
+async function loadHistory(peer, token = historyLoadToken){
+ try{
+  if(!isActiveHistoryLoad(peer, token)) return;
+  setChatHistoryHint("正在接收历史消息...");
+  console.log("[history] load start", { peer });
+  const r = await authedFetch(`/api/messages?peer=${encodeURIComponent(peer)}`);
+  const j = await readJsonSafe(r);
+  console.log("[history] response", { status: r.status, body: j });
+  if(!isActiveHistoryLoad(peer, token)) return;
+  if(!r.ok || !j || !j.success){
+    setChatHistoryHint("历史消息接收失败", true);
+    toast("历史消息加载失败：" + (j?.error || ("HTTP " + r.status)), "err");
+    return;
+  }
+  const list = Array.isArray(j.messages) ? j.messages : (Array.isArray(j.message) ? j.message : []);
+  list.sort((a,b)=>{
+    const at = normalizeTsMs((a && a.payload && a.payload.ts) ? a.payload.ts : a?.ts || 0);
+    const bt = normalizeTsMs((b && b.payload && b.payload.ts) ? b.payload.ts : b?.ts || 0);
+    return at - bt;
+  });
+  latestTsByPeer.set(peerKey(peer), 0);
+  console.log("[history] list length", list.length);
+  if(list.length === 0){
+    setChatHistoryHint("");
+  }else{
+    setChatHistoryHint(`正在解密历史消息... 0/${list.length}`);
+  }
+  let done = 0;
+  for(const m of list){
+    if(!isActiveHistoryLoad(peer, token)) return;
+    if(!m || typeof m !== "object") continue;
+    const rawPayload = m.payload;
+    const payload = (rawPayload && rawPayload.payload) ? rawPayload.payload : (rawPayload || null);
+    const ts = normalizeTsMs((rawPayload && rawPayload.ts) ? rawPayload.ts : m.ts);
+    const from = (rawPayload && rawPayload.from) ? rawPayload.from : m.from;
+    console.log("[history] normalized", { from, ts, hasPayload: !!payload });
+    if(!from || !payload) continue;
+    try{
+      await handleIncomingMessage({
+        from,
+        payload,
+        ts,
+        peer
+      });
+    }catch(err){
+      console.warn("[history] decrypt skip", { from, ts, err });
+      continue;
+    }
+    done++;
+    if(isActiveHistoryLoad(peer, token)){
+      setChatHistoryHint(`正在解密历史消息... ${done}/${list.length}`);
+    }
+  }
+  if(!isActiveHistoryLoad(peer, token)) return;
+  const lastTs = getLatestTs(peer);
+  clearUnread(peer);
+  renderFriendList();
+  sendReadReceipt(peer, lastTs);
+  setChatHistoryHint("");
+  console.log("[history] load done");
+ }catch(err){
+  if(isActiveHistoryLoad(peer, token)){
+    setChatHistoryHint("历史消息解密失败", true);
+  }
+  console.error("[history] load exception", err);
+  toast("历史消息加载失败", "err");
+ }
+}
+
+function renderGroupMessage(from, text, ts){
+  const div = document.createElement("div");
+  div.className = "msg " + (from === session.username ? "me" : "peer");
+  if(from){
+    const n = document.createElement("div");
+    n.className = "muted";
+    n.style.marginBottom = "2px";
+    n.textContent = from === session.username ? "我" : from;
+    div.appendChild(n);
+  }
+  const body = document.createElement("div");
+  body.textContent = text;
+  div.appendChild(body);
+  const time = new Date(normalizeTsMs(ts));
+  if(!isNaN(time.getTime())){
+    const t = document.createElement("div");
+    t.className = "muted";
+    t.style.marginTop = "4px";
+    t.textContent = time.toLocaleString();
+    div.appendChild(t);
+  }
+  chatMessages.appendChild(div);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function renderGroupBinary(from, kind, data, meta, ts){
+  const div = document.createElement("div");
+  div.className = "msg " + (from === session.username ? "me" : "peer");
+  if(from){
+    const n = document.createElement("div");
+    n.className = "muted";
+    n.style.marginBottom = "2px";
+    n.textContent = from === session.username ? "我" : from;
+    div.appendChild(n);
+  }
+  if(kind === "image"){
+    const url = URL.createObjectURL(new Blob([data], {type: meta?.mime || "application/octet-stream"}));
+    const img = document.createElement("img");
+    img.src = url;
+    div.appendChild(img);
+  }else{
+    const url = URL.createObjectURL(new Blob([data], {type: meta?.mime || "application/octet-stream"}));
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = meta?.name || "file.bin";
+    a.textContent = "📎 " + (meta?.name || "文件");
+    div.appendChild(a);
+  }
+  const time = new Date(normalizeTsMs(ts));
+  if(!isNaN(time.getTime())){
+    const t = document.createElement("div");
+    t.className = "muted";
+    t.style.marginTop = "4px";
+    t.textContent = time.toLocaleString();
+    div.appendChild(t);
+  }
+  chatMessages.appendChild(div);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function getGroupTextFromPayload(payload){
+  if(payload && typeof payload === "object"){
+    return String(payload.text || "");
+  }
+  if(typeof payload === "string"){
+    try{
+      const p = JSON.parse(payload);
+      if(p && typeof p === "object") return String(p.text || "");
+    }catch{}
+  }
+  return "";
+}
+
+async function decryptGroupPayload(payload, from){
+  if(!payload || typeof payload !== "object"){
+    throw new Error("invalid group payload");
+  }
+  const keys = (payload.keys && typeof payload.keys === "object") ? payload.keys : {};
+  let myWrap = keys[session.username] || keys[String(session.username || "").toLowerCase()] || null;
+  if(!myWrap){
+    const uname = String(session.username || "");
+    const foundKey = Object.keys(keys).find(k => String(k).toLowerCase() === uname.toLowerCase());
+    if(foundKey) myWrap = keys[foundKey];
+  }
+  if(!myWrap || !myWrap.iv || !myWrap.wrapped_key){
+    throw new Error("missing wrapped group key");
+  }
+  const senderSpki = String(payload.sender_spki || groupMemberPublicKeyMap.get(from) || "").trim();
+  if(!senderSpki){
+    throw new Error("missing sender public key");
+  }
+  const pairKey = await resolveUserAesKeyBySpki(from, senderSpki);
+  const rawGroupMsgKey = await crypto.subtle.decrypt(
+    {name:"AES-GCM", iv: base64ToBytes(myWrap.iv)},
+    pairKey,
+    base64ToBytes(myWrap.wrapped_key)
+  );
+  const groupMsgKey = await crypto.subtle.importKey(
+    "raw",
+    rawGroupMsgKey,
+    {name:"AES-GCM"},
+    false,
+    ["decrypt"]
+  );
+  let ciphertextBytes;
+  if(payload.ciphertext){
+    ciphertextBytes = base64ToBytes(payload.ciphertext);
+  }else{
+    ciphertextBytes = await downloadEncryptedFile(payload);
+  }
+  const plain = await crypto.subtle.decrypt(
+    {name:"AES-GCM", iv: base64ToBytes(payload.iv)},
+    groupMsgKey,
+    ciphertextBytes
+  );
+  return new Uint8Array(plain);
+}
+
+async function loadGroupHistory(groupId, token = historyLoadToken){
+  try{
+    if(!isActiveHistoryLoad(String(groupId), token)) return;
+    setChatHistoryHint("正在接收历史消息...");
+    const r = await authedFetch(`/api/group_messages?group_id=${encodeURIComponent(groupId)}`);
+    let j = null;
+    let raw = "";
+    try{
+      raw = await r.clone().text();
+    }catch{}
+    j = await readJsonSafe(r);
+    console.log("[group_history] response", { status: r.status, ok: r.ok, raw, parsed: j });
+    if(!isActiveHistoryLoad(String(groupId), token)) return;
+    if(!r.ok || !j || !j.success){
+      const errMsg = String(j?.error || "");
+      if(errMsg.includes("无权限")){
+        setChatHistoryHint("你已不在该群或没有权限", true);
+        toast("你已不在该群，已为你刷新群列表", "warn");
+        clearChatSelection();
+        await loadGroups();
+      }else{
+        setChatHistoryHint("历史消息接收失败", true);
+        toast("群历史加载失败，请稍后再试", "err");
+      }
+      return;
+    }
+    const listRaw = Array.isArray(j.message) ? j.message : [];
+    const list = listRaw.map((m)=>{
+      if(m && typeof m === "object") return m;
+      if(typeof m === "string"){
+        try{ return JSON.parse(m); }catch{ return null; }
+      }
+      return null;
+    }).filter(Boolean);
+    list.sort((a,b)=>normalizeTsMs(a?.ts) - normalizeTsMs(b?.ts));
+    let maxTs = 0;
+    let done = 0;
+    setChatHistoryHint(list.length ? `正在解密历史消息... 0/${list.length}` : "");
+    for(const m of list){
+      if(!isActiveHistoryLoad(String(groupId), token)) return;
+      maxTs = Math.max(maxTs, normalizeTsMs(m?.ts || 0));
+      const from = String(m?.from || "");
+      const payload = m && typeof m.payload === "object" ? m.payload : null;
+      if(!from || !payload) continue;
+      try{
+        const plainBytes = await decryptGroupPayload(payload, from);
+        const kind = String(payload.kind || "text");
+        if(kind === "text"){
+          renderGroupMessage(from, new TextDecoder().decode(plainBytes), m.ts || 0);
+        }else{
+          renderGroupBinary(from, kind, plainBytes, payload, m.ts || 0);
+        }
+      }catch(err){
+        console.warn("[group_history] decrypt skip", { from, err });
+      }
+      done++;
+      setChatHistoryHint(`正在解密历史消息... ${done}/${list.length}`);
+    }
+    if(maxTs > 0){
+      setGroupLastReadTs(groupId, maxTs);
+      clearGroupUnread(groupId);
+      renderGroupList();
+    }
+    setChatHistoryHint("");
+  }catch{
+    if(isActiveHistoryLoad(String(groupId), token)){
+      setChatHistoryHint("历史消息加载失败", true);
+    }
+  }
+}
+
+async function fetchPasswordParams(){
+  if(!session.httpToken) throw new Error("no http token");
+
+  const r = await fetch(HTTP_BASE + "/api/user/password_params", {
+    method: "GET",
+    headers: {
+      "Authorization": "Bearer " + session.httpToken
+    }
+  });
+
+  if(!r.ok) throw new Error("http " + r.status);
+
+  const j = await r.json();
+  if(!j.success || !j.passwordHash)
+    throw new Error("invalid response");
+
+  return j.passwordHash; 
+  // { kdf, iterations, salt }
+}
+
+function $(id){ return document.getElementById(id); }
+
+function setStatus(msg, isErr=false){
+  const el = $("status");
+  el.textContent = msg;
+  el.style.color = isErr ? "rgba(239,68,68,.95)" : "rgba(255,255,255,.70)";
+}
+
+function setWsState(text){
+  $("wsState").textContent = text;
+}
+
+function updateWsDot(){
+  const dot1 = $("wsDot");
+  const dot2 = $("wsDotHome");
+  const ok = wsReady;
+  if(dot1){
+    dot1.className = "dot " + (ok ? "ok" : "bad");
+  }
+  if(dot2){
+    dot2.className = "dot " + (ok ? "ok" : "bad");
+  }
+}
+
+function strToUint8(s){ return textEncoder.encode(s); }
+
+function base64ToBytes(b64){
+  const bin = atob(b64);
+  const arr = new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++) arr[i] = bin.charCodeAt(i);
+  return arr;
+}
+function bufToBase64(buf){
+  const bytes = buf instanceof ArrayBuffer ? new Uint8Array(buf) : new Uint8Array(buf.buffer || buf);
+  let bin = "";
+  for (let b of bytes) bin += String.fromCharCode(b);
+  return btoa(bin);
+}
+function getRandomBytes(n){
+  const arr = new Uint8Array(n);
+  crypto.getRandomValues(arr);
+  return arr;
+}
+
+function updateChangePwIndicators(pw){
+  const ruleLength = document.getElementById("cp-rule-length");
+  const ruleLower = document.getElementById("cp-rule-lower");
+  const ruleUpper = document.getElementById("cp-rule-upper");
+  const ruleDigit = document.getElementById("cp-rule-digit");
+  const ruleSymbol = document.getElementById("cp-rule-symbol");
+  const strength = document.getElementById("cpStrength");
+
+  const hasLower = /[a-z]/.test(pw);
+  const hasUpper = /[A-Z]/.test(pw);
+  const hasDigit = /[0-9]/.test(pw);
+  const hasSymbol = /[^\w\s]/.test(pw);
+  const longEnough = pw.length >= MIN_PASSWORD_LENGTH;
+
+  if(ruleLength) ruleLength.textContent = (longEnough ? "✅" : "❌") + " 长度至少 16 位";
+  if(ruleLower) ruleLower.textContent = (hasLower ? "✅" : "❌") + " 需要小写字母";
+  if(ruleUpper) ruleUpper.textContent = (hasUpper ? "✅" : "❌") + " 需要大写字母";
+  if(ruleDigit) ruleDigit.textContent = (hasDigit ? "✅" : "❌") + " 需要数字";
+  if(ruleSymbol) ruleSymbol.textContent = (hasSymbol ? "✅" : "❌") + " 需要符号";
+
+  const score = [longEnough, hasLower, hasUpper, hasDigit, hasSymbol].filter(Boolean).length;
+  const levels = ["很弱","弱","一般","强","很强"];
+  if(strength){
+    strength.textContent = "密码强度：" + levels[Math.min(score,4)];
+  }
+}
+
+function isStrongPassword(pw){
+  return pw.length >= MIN_PASSWORD_LENGTH
+    && /[a-z]/.test(pw)
+    && /[A-Z]/.test(pw)
+    && /[0-9]/.test(pw)
+    && /[^\w\s]/.test(pw);
+}
+
+/* =====================================================
+   UI：眼睛切换
+===================================================== */
+(function setupEye(){
+  const input = $("password");
+  const eye = $("togglePw");
+  eye.addEventListener("click", ()=> {
+    input.type = (input.type === "password" ? "text" : "password");
+  });
+})();
+
+/* =====================================================
+   链接
+===================================================== */
+$("linkRegister").addEventListener("click", (e)=>{
+  e.preventDefault();
+  location.href = REGISTER_URL;
+});
+$("btnReconnect").addEventListener("click", ()=>{
+  toast("正在手动重连 WS…", "warn");
+  try{ if(ws) ws.close(4000, "manual reconnect"); }catch{}
+  ws = null;
+  wsReady = false;
+  connectWS();
+});
+if(btnReconnectHome){
+  btnReconnectHome.addEventListener("click", ()=>{
+    toast("正在手动重连 WS…", "warn");
+    try{ if(ws) ws.close(4000, "manual reconnect"); }catch{}
+    ws = null;
+    wsReady = false;
+    connectWS();
+  });
+}
+
+/* =====================================================
+   WebCrypto：PBKDF2 派生 passwordHash
+===================================================== */
+async function derivePasswordHash(password, saltBytes, iterations){
+  const baseKey = await crypto.subtle.importKey(
+    "raw",
+    strToUint8(password),
+    { name:"PBKDF2" },
+    false,
+    ["deriveBits"]
+  );
+
+  const bits = await crypto.subtle.deriveBits(
+    { name:"PBKDF2", salt: saltBytes, iterations, hash:"SHA-256" },
+    baseKey,
+    256
+  );
+  return new Uint8Array(bits); // 32 bytes
+}
+
+/* 密码 → AES-256-GCM key（解密/加密私钥） */
+async function deriveAesKey(password, saltBytes, iterations, usage){
+  const baseKey = await crypto.subtle.importKey(
+    "raw",
+    strToUint8(password),
+    { name:"PBKDF2" },
+    false,
+    ["deriveKey"]
+  );
+  return await crypto.subtle.deriveKey(
+    { name:"PBKDF2", salt: saltBytes, iterations, hash:"SHA-256" },
+    baseKey,
+    { name:"AES-GCM", length:256 },
+    false,
+    usage
+  );
+}
+
+async function decryptPrivateKey(aesKey, ivBytes, ciphertextBytes){
+  const pkcs8 = await crypto.subtle.decrypt(
+    { name:"AES-GCM", iv: ivBytes },
+    aesKey,
+    ciphertextBytes
+  );
+  return new Uint8Array(pkcs8);
+}
+
+async function encryptPrivateKey(aesKey, ivBytes, plainBytes){
+  const ct = await crypto.subtle.encrypt(
+    { name:"AES-GCM", iv: ivBytes },
+    aesKey,
+    plainBytes
+  );
+  return new Uint8Array(ct);
+}
+
+async function importPrivateKeyPkcs8(pkcs8Bytes){
+  return await crypto.subtle.importKey(
+    "pkcs8",
+    pkcs8Bytes,
+    { name:"ECDH", namedCurve:"P-256" },
+    false,
+    ["deriveBits","deriveKey"]
+  );
+}
+
+/* =====================================================
+   WebSocket：连接 / 重连
+===================================================== */
+function connectWS(){
+  if (ws && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)) {
+    return;
+  }
+
+  wsReady = false;
+  setWsState("连接中…");
+  updateWsDot();
+
+  const currentWS = new WebSocket(WS_URL);
+  ws = currentWS;
+
+  currentWS.onopen = () => {
+    if (ws !== currentWS) return;
+    wsReady = true;
+    setWsState("已连接");
+    updateWsDot();
+    updateHomeBadges();
+    updateConnPills();
+
+    if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null; }
+    reconnectDelay = 3000;
+
+    // try auto re-login if we have credentials in memory
+    if (session.lastLogin && !session.wsAuthed) {
+      startLogin(session.lastLogin.username, session.lastLogin.password);
+    }
+  };
+
+  currentWS.onclose = () => {
+    if (ws !== currentWS) return;
+
+    wsReady = false;
+    ws = null;
+
+    setWsState("已断开");
+    updateWsDot();
+    updateHomeBadges();
+    updateConnPills();
+
+    if (session.username) {
+      // 断线不强制登出，等待重连
+      session.wsAuthed = false;
+      setStatus("连接已断开，正在重连…", true);
+      toast("WS 断开：正在重连", "warn");
+    }
+
+    if (reconnectTimer) return;
+
+    setWsState("断开，重连中…");
+    updateWsDot();
+
+    reconnectTimer = setTimeout(() => {
+      reconnectTimer = null;
+      connectWS();
+      reconnectDelay = Math.min(reconnectDelay * 1.5, 30000);
+    }, reconnectDelay);
+  };
+
+  currentWS.onerror = () => { /* 统一由 onclose 处理 */ };
+
+  currentWS.onmessage = async (ev) => {
+    if (ws !== currentWS) return;
+
+    console.log("[ws] raw", ev.data);
+    let msg;
+    try { msg = JSON.parse(ev.data); } catch { return; }
+    console.log("[ws] parsed", msg);
+
+    if (msg.type === "login_challenge") {
+      await handleLoginChallenge(msg);
+      return;
+    }
+    if (msg.type === "login_result") {
+      await handleLoginResult(msg);
+      return;
+    }
+    if (msg.type === "chat_send") {
+      handleChatSendAck(msg);
+      return;
+    }
+    if (msg.type === "group_send") {
+      if(msg.group_id && msg.key_epoch){
+        updateGroupEpochLocal(msg.group_id, msg.key_epoch);
+      }
+      if(!msg.success){
+        if(msg.error === "group_key_epoch_mismatch"){
+          toast("群密钥版本已更新，正在刷新群信息", "warn");
+          await loadGroups();
+          if(currentChatType === "group" && currentChat && Number(currentChat.id) === Number(msg.group_id || 0)){
+            await refreshCurrentGroupMembers(currentChat.id);
+          }
+        }
+        toast("群消息发送失败：" + (msg.error || "unknown_error"), "err");
+      }
+      return;
+    }
+    if (msg.type === "friend_accepted") {
+      await handleFriendAccepted(msg);
+      return;
+    }
+    if (msg.type === "friend_removed") {
+      handleFriendRemoved(msg);
+      return;
+    }
+    if (msg.type === "friends_refresh") {
+      await loadFriends();
+      await loadGroups();
+      return;
+    }
+    if (msg.type === "groups_refresh") {
+      await loadGroups();
+      if(currentChatType === "group" && currentChat){
+        await refreshCurrentGroupMembers(currentChat.id);
+      }
+      return;
+    }
+    if (msg.type === "group_key_epoch") {
+      updateGroupEpochLocal(msg.group_id, msg.key_epoch);
+      renderGroupList();
+      if(currentChatType === "group" && currentChat && Number(currentChat.id) === Number(msg.group_id || 0)){
+        await refreshCurrentGroupMembers(currentChat.id);
+      }
+      return;
+    }
+    // 其他消息
+    if (msg.type === "chat_recv") {
+      if (msg.from === session.username) {
+        const key = (msg.client_ts !== undefined && msg.client_ts !== null)
+      ? String(msg.client_ts)
+      : (msg.ts !== undefined && msg.ts !== null ? String(msg.ts) : null);
+        if (key && pendingSendByTs.has(key)) {
+          pendingSendByTs.delete(key);
+        }
+        return;
+      }
+      const peer = msg.from;
+      if(!peer){
+        return;
+      }
+
+      if(isChatOpenFor(peer)){
+        await handleIncomingMessage(msg);
+        const lastTs = getLatestTs(peer) || normalizeTsMs(msg.ts);
+        clearUnread(peer);
+        renderFriendList();
+        sendReadReceipt(peer, lastTs);
+      }else{
+        markUnread(peer, true);
+        renderFriendList();
+      }
+      return;
+}
+if (msg.type === "group_recv") {
+  const gid = Number(msg.group_id || 0);
+  if(!gid) return;
+  if(msg.key_epoch){
+    updateGroupEpochLocal(gid, msg.key_epoch);
+  }
+  if(!groups.some(g => Number(g.id) === gid)){
+    groups.push({ id: gid, name: `群聊#${gid}`, key_epoch: Number(msg.key_epoch || 1) });
+  }
+  const isOpen = currentChatType === "group" && currentChat && Number(currentChat.id) === gid;
+  if(isOpen){
+    try{
+      const plainBytes = await decryptGroupPayload(msg.payload || {}, msg.from || "");
+      const kind = String(msg?.payload?.kind || "text");
+      if(kind === "text"){
+        renderGroupMessage(msg.from || "", new TextDecoder().decode(plainBytes), msg.ts || Date.now());
+      }else{
+        renderGroupBinary(msg.from || "", kind, plainBytes, msg.payload || {}, msg.ts || Date.now());
+      }
+    }catch(err){
+      console.warn("[group_recv] decrypt failed", err);
+    }
+    clearGroupUnread(gid);
+    renderGroupList();
+  }else{
+    bumpGroupUnread(gid, 1);
+    markGroupUnread(gid, true);
+    renderGroupList();
+    toast("收到群消息", "warn", 2000);
+  }
+  return;
+}
+if (msg.type === "friend_request") {
+  toast("收到好友请求", "warn");
+  await loadFriends();
+}
+
+  };
+}
+
+function closeWS(){
+  if (ws) {
+    try { ws.close(1000, "logout"); } catch {}
+  }
+  ws = null;
+  wsReady = false;
+  updateWsDot();
+}
+
+/* =====================================================
+   登录协议（两步）
+===================================================== */
+let pendingLogin = null; // {username, password}
+
+async function sendJson(obj){
+  if (!ws || ws.readyState !== WebSocket.OPEN) {
+    setStatus("WebSocket 未连接，正在连接…", true);
+    connectWS();
+    return false;
+  }
+  ws.send(JSON.stringify(obj));
+  return true;
+}
+
+async function startLogin(username, password){
+  pendingLogin = { username, password };
+
+  const ok = await sendJson({ type:"login_start", username });
+  if(ok) setStatus("请求登录参数中…");
+}
+
+async function handleLoginChallenge(msg){
+  if(!pendingLogin) return;
+
+  const { username, password } = pendingLogin;
+
+  const saltB64 = msg?.salt ?? msg?.passwordHash?.salt;
+  const iterations = Number(msg?.iterations ?? msg?.passwordHash?.iterations ?? PBKDF2_ITER_PWHASH);
+
+  if(!saltB64){
+    setStatus("服务器未返回 salt，无法登录", true);
+    pendingLogin = null;
+    toast("服务器未返回 salt", "err");
+    return;
+  }
+
+  // 保存 challenge 参数（后续改密码/注销用）
+  session.pwSaltB64 = saltB64;
+  session.pwIterations = iterations;
+
+  const saltBytes = base64ToBytes(saltB64);
+
+  setStatus("计算密码哈希中…");
+  const pwHashBytes = await derivePasswordHash(password, saltBytes, iterations);
+
+  await sendJson({
+    type:"login",
+    username,
+    passwordHash:{
+      kdf:"PBKDF2-HMAC-SHA256",
+      iterations,
+      salt: saltB64,
+      hash: bufToBase64(pwHashBytes)
+    }
+  });
+
+  setStatus("发送登录请求中…");
+}
+
+async function handleLoginResult(msg){
+  if(!msg.success){
+    setStatus("登录失败：" + (msg.error || "未知原因"), true);
+    toast("登录失败：" + (msg.error || "未知原因"), "err");
+    pendingLogin = null;
+    return;
+  }
+
+  if(!pendingLogin){
+    setStatus("登录成功，但本地缺少 pendingLogin（密码上下文）", true);
+    toast("登录成功但缺少 pendingLogin", "warn");
+    return;
+  }
+
+  const { username, password } = pendingLogin;
+
+  if(!msg.encryptedPrivateKey || !msg.encryptedPrivateKey.salt || !msg.encryptedPrivateKey.iv || !msg.encryptedPrivateKey.ciphertext){
+    setStatus("登录成功，但服务器未返回加密私钥字段", true);
+    toast("缺少 encryptedPrivateKey", "err");
+    pendingLogin = null;
+    return;
+  }
+
+  setStatus("解密私钥中…");
+
+  const epk = msg.encryptedPrivateKey;
+  const iterKey = Number(epk.iterations || PBKDF2_ITER_KEY_DEFAULT);
+  const saltKeyBytes = base64ToBytes(epk.salt);
+  const ivBytes = base64ToBytes(epk.iv);
+  const ciphertextBytes = base64ToBytes(epk.ciphertext);
+
+  try{
+    const aesKey = await deriveAesKey(password, saltKeyBytes, iterKey, ["decrypt"]);
+    const pkcs8Bytes = await decryptPrivateKey(aesKey, ivBytes, ciphertextBytes);
+
+    // ===== 登录成功后：写入 session =====
+    session.username = username;
+    session.httpToken = msg.http_token || null;
+    session.avatarUrl = msg.avatar_url || "/resources/avatars/default.png";
+    session.displayName = msg.display_name || msg.displayName || "";
+    session.wsAuthed = true;
+    session.lastLogin = { username, password };
+
+    session.privateKeyPkcs8Bytes = pkcs8Bytes;
+
+    try { session.privateKeyCryptoKey = await importPrivateKeyPkcs8(pkcs8Bytes); }
+    catch { session.privateKeyCryptoKey = null; }
+
+    if (msg.publicKey && msg.publicKey.spki) {
+      session.publicKeySpkiBytes = base64ToBytes(msg.publicKey.spki);
+      try {
+        session.publicKeyCryptoKey = await crypto.subtle.importKey(
+          "spki",
+          session.publicKeySpkiBytes,
+          { name: "ECDH", namedCurve: "P-256" },
+          true,
+          []
+        );
+      } catch { session.publicKeyCryptoKey = null; }
+    } else {
+      session.publicKeySpkiBytes = null;
+      session.publicKeyCryptoKey = null;
+    }
+
+    pendingLogin = null;
+    setStatus("");
+    toast("登录成功", "ok");
+    enterHome();
+
+  }catch(err){
+    console.error(err);
+    setStatus("私钥解密失败：" + (err.message || err), true);
+    toast("私钥解密失败", "err");
+    pendingLogin = null;
+  }
+}
+
+/* =====================================================
+   视图切换
+===================================================== */
+function backToLogin(){
+  $("viewHome").classList.add("hidden");
+  $("viewLogin").classList.remove("hidden");
+  unreadDotMap.clear();
+  sessionKeys.clear();
+  groupPairKeys.clear();
+  groupUnreadDotMap.clear();
+  groupUnreadCountMap.clear();
+  latestTsByPeer.clear();
+  groups = [];
+  clearChatSelection();
+  updateHomeBadges();
+  updateConnPills();
+}
+
+function enterHome(){
+  $("viewLogin").classList.add("hidden");
+  $("viewHome").classList.remove("hidden");
+
+  const path = session.avatarUrl || "/resources/avatars/default.png";
+  $("avatarImg").src = HTTP_BASE + path;
+
+  $("displayName").value = session.displayName || "";
+
+  updateHomeBadges();
+  updateConnPills();
+  loadFriends();
+  loadGroups();
+  clearChatSelection();
+  setMobilePane("list");
+
+}
+
+function updateHomeBadges(){
+  if($("homeUser")) $("homeUser").textContent = "用户：" + (session.username || "-");
+  if($("homeWs")) $("homeWs").textContent = "WS：" + (wsReady ? "已连接" : "未连接");
+  if($("homeKey")) $("homeKey").textContent = "状态：" + (session.privateKeyPkcs8Bytes ? "可用" : "未就绪");
+  updateWsDot();
+}
+
+function updateConnPills(){
+  if($("pillHttp")) $("pillHttp").textContent = "HTTP：" + (session.httpToken ? "已登录(token)" : "-");
+  if($("pillWs")) $("pillWs").textContent = "WS：" + (wsReady ? "已连接" : "未连接");
+}
+
+/* 清理敏感内存 */
+function wipeSensitiveMemory(){
+  session.username = null;
+  session.displayName = null;
+  session.avatarUrl = null;
+  session.httpToken = null;
+
+  session.pwSaltB64 = null;
+  session.pwIterations = null;
+
+  session.publicKeySpkiBytes = null;
+  session.publicKeyCryptoKey = null;
+
+  if (session.privateKeyPkcs8Bytes) {
+    try { session.privateKeyPkcs8Bytes.fill(0); } catch {}
+  }
+  session.privateKeyPkcs8Bytes = null;
+  session.privateKeyCryptoKey = null;
+}
+
+/* =====================================================
+   登录表单
+===================================================== */
+$("loginForm").addEventListener("submit", async (e)=>{
+  e.preventDefault();
+  setStatus("");
+
+  const username = $("username").value.trim();
+  const password = $("password").value;
+
+  if(!username) return setStatus("用户名不能为空", true);
+  if(!password) return setStatus("密码不能为空", true);
+
+  if(!wsReady){
+    setStatus("WebSocket 未连接，正在连接…");
+    connectWS();
+  }
+
+  await startLogin(username, password);
+});
+
+/* =====================================================
+   退出
+===================================================== */
+$("btnLogout").addEventListener("click", ()=>{
+  closeWS();
+  wipeSensitiveMemory();
+  pendingLogin = null;
+  session.wsAuthed = false;
+  session.lastLogin = null;
+
+  backToLogin();
+  setStatus("");
+  toast("已退出", "ok");
+
+  connectWS();
+});
+
+/* =====================================================
+   HTTP helper
+===================================================== */
+async function authedFetch(path, opt={}){
+  const headers = opt.headers ? {...opt.headers} : {};
+  if(session.httpToken){
+    headers["Authorization"] = "Bearer " + session.httpToken;
+  }
+  return await fetch(HTTP_BASE + path, { ...opt, headers });
+}
+
+async function readJsonSafe(resp){
+  try { return await resp.json(); } catch { return null; }
+}
+
+/* =====================================================
+   Profile：保存昵称
+===================================================== */
+$("btnSaveProfile").onclick = async ()=>{
+  const name = ($("displayName").value || "").trim();
+  $("profileHint").textContent = "";
+
+  if(!session.httpToken){
+    toast("没有 http_token：后端需要在 login_result 返回 http_token", "err");
+    $("profileHint").textContent = "缺少 http_token";
+    return;
+  }
+
+  try{
+    const r = await authedFetch("/api/user/profile", {
+      method: "PATCH",
+      headers: { "Content-Type":"application/json" },
+      body: JSON.stringify({ display_name: name })
+    });
+
+    const j = await readJsonSafe(r);
+
+    if(!r.ok){
+      toast("保存失败：HTTP " + r.status, "err");
+      $("profileHint").textContent = "HTTP " + r.status;
+      return;
+    }
+    if(!j || !j.success){
+      toast("保存失败：" + ((j && j.error) ? j.error : "未知错误"), "err");
+      $("profileHint").textContent = (j && j.error) ? j.error : "未知错误";
+      return;
+    }
+
+    session.displayName = j.display_name ?? name;
+    /* ===== 新增：立刻同步 UI ===== */
+$("homeUser").textContent =
+  "用户：" + (session.displayName || session.username);
+
+$("displayName").value = session.displayName;
+/* ============================ */
+
+toast("昵称已保存", "ok");
+$("profileHint").textContent = "已保存";
+    setTimeout(()=> $("profileHint").textContent="", 2000);
+
+  }catch(e){
+    console.error(e);
+    toast("保存失败（网络/异常）", "err");
+    $("profileHint").textContent = "异常";
+  }
+};
+
+/* =====================================================
+   头像上传
+===================================================== */
+$("btnUploadAvatar").onclick = async ()=>{
+  $("avatarHint").textContent = "";
+  const f = $("avatarFile").files[0];
+  if(!f) { toast("先选个图片", "warn"); return; }
+
+  if(!session.httpToken){
+    toast("没有 http_token：头像上传需要鉴权", "err");
+    $("avatarHint").textContent = "缺少 http_token";
+    return;
+  }
+
+  try{
+    const buf = await f.arrayBuffer();
+
+    const r = await authedFetch("/api/avatar/upload", {
+      method: "POST",
+      headers: {
+        "Content-Type": f.type || "application/octet-stream",
+        "X-Filename": encodeURIComponent(f.name)
+      },
+      body: buf
+    });
+
+    if(!r.ok){
+      toast("头像上传失败：HTTP " + r.status, "err");
+      $("avatarHint").textContent = "HTTP " + r.status;
+      return;
+    }
+
+    const j = await readJsonSafe(r);
+    if(!j || !j.success){
+      toast("头像上传失败：" + ((j && j.error) ? j.error : "未知错误"), "err");
+      $("avatarHint").textContent = (j && j.error) ? j.error : "未知错误";
+      return;
+    }
+
+    session.avatarUrl = j.avatar_url;
+    $("avatarImg").src = HTTP_BASE + j.avatar_url + "?t=" + Date.now();
+    toast("头像已更新", "ok");
+    $("avatarHint").textContent = "已更新";
+    setTimeout(()=> $("avatarHint").textContent="", 2000);
+
+  }catch(e){
+    console.error(e);
+    toast("头像上传失败（网络/异常）", "err");
+    $("avatarHint").textContent = "异常";
+  }
+};
+
+/* =====================================================
+   改密码：生成 newPasswordHash + newEncryptedPrivateKey
+===================================================== */
+document.getElementById("btnChangePassword").onclick = async ()=>{
+  const oldPw = document.getElementById("oldPw").value;
+  const newPw = document.getElementById("newPw").value;
+  const newPw2 = document.getElementById("newPw2").value;
+
+  if(!oldPw || !newPw || !newPw2)
+    return toast("请填写完整", "warn");
+
+  if(newPw !== newPw2)
+    return toast("两次新密码不一致", "warn");
+
+  if(!isStrongPassword(newPw))
+    return toast("新密码强度不足", "warn");
+
+  if(!session.privateKeyPkcs8Bytes)
+    return toast("本地没有私钥，无法改密码", "err");
+
+  try{
+    toast("获取密码参数中…", "warn");
+
+    /* 1️⃣ 获取 password hash 参数 */
+    const pwParams = await fetchPasswordParams();
+    const oldSaltBytes = base64ToBytes(pwParams.salt);
+    const oldIter = Number(pwParams.iterations);
+
+    /* 2️⃣ 计算 oldPasswordHash */
+    const oldHashBytes =
+      await derivePasswordHash(oldPw, oldSaltBytes, oldIter);
+
+    const oldPasswordHash = {
+      kdf: pwParams.kdf,
+      iterations: oldIter,
+      salt: pwParams.salt,
+      hash: bufToBase64(oldHashBytes)
+    };
+
+    /* 3️⃣ 生成 newPasswordHash */
+    const newSaltBytes = getRandomBytes(16);
+    const newSaltB64 = bufToBase64(newSaltBytes);
+    const newIter = 300000; // ← 你可以在这里升级安全强度
+
+    const newHashBytes =
+      await derivePasswordHash(newPw, newSaltBytes, newIter);
+
+    const newPasswordHash = {
+      kdf: "PBKDF2-HMAC-SHA256",
+      iterations: newIter,
+      salt: newSaltB64,
+      hash: bufToBase64(newHashBytes)
+    };
+
+    /* 4️⃣ 用新密码重新加密私钥 */
+    const keySalt = getRandomBytes(16);
+    const iv = getRandomBytes(12);
+
+    const aesKey = await deriveAesKey(
+      newPw,
+      keySalt,
+      PBKDF2_ITER_KEY_DEFAULT,
+      ["encrypt"]
+    );
+
+    const ct = await encryptPrivateKey(
+      aesKey,
+      iv,
+      session.privateKeyPkcs8Bytes
+    );
+
+    const newEncryptedPrivateKey = {
+      kdf: "PBKDF2-HMAC-SHA256",
+      iterations: PBKDF2_ITER_KEY_DEFAULT,
+      salt: bufToBase64(keySalt),
+      cipher: "AES-256-GCM",
+      iv: bufToBase64(iv),
+      ciphertext: bufToBase64(ct)
+    };
+
+    /* 5️⃣ 提交给服务器 */
+    toast("提交改密码请求…", "warn");
+
+    const r = await fetch(HTTP_BASE + "/api/user/password", {
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer " + session.httpToken,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        oldPasswordHash,
+        newPasswordHash,
+        newEncryptedPrivateKey
+      })
+    });
+
+    const j = await readJsonSafe(r);
+    if(!r.ok) throw new Error("HTTP " + r.status);
+    if(!j) throw new Error("invalid response");
+    if(j.success === false || j.success === 0)
+      throw new Error(j?.error || "change password failed");
+
+    toast("密码修改成功（私钥已重新加密）", "ok");
+
+    document.getElementById("oldPw").value = "";
+    document.getElementById("newPw").value = "";
+    document.getElementById("newPw2").value = "";
+
+  }catch(e){
+    console.error(e);
+    toast("改密码失败：" + e.message, "err");
+  }
+};
+
+
+/* =====================================================
+   注销账号
+===================================================== */
+$("btnDeleteAccount").onclick = async ()=>{
+  $("delHint").textContent = "";
+
+  if(!session.httpToken){
+    toast("缺少 http_token：注销需要鉴权", "err");
+    $("delHint").textContent = "缺少 http_token";
+    return;
+  }
+
+  const pw = $("delPw").value;
+  const confirm = ($("delConfirm").value || "").trim();
+
+  if(!pw){
+    toast("请输入密码确认", "warn");
+    return;
+  }
+  if(confirm !== "DELETE"){
+    toast("二次确认需要输入 DELETE", "warn");
+    return;
+  }
+
+  try{
+    toast("获取密码参数中…", "warn");
+    $("delHint").textContent = "获取参数…";
+
+    /* 1️⃣ 实时获取 password hash 参数（关键修正点） */
+    const pwParams = await fetchPasswordParams();
+    const iter = Number(pwParams.iterations);
+    const saltBytes = base64ToBytes(pwParams.salt);
+
+    /* 2️⃣ 计算 passwordHash */
+    const hashBytes = await derivePasswordHash(pw, saltBytes, iter);
+
+    const passwordHash = {
+      kdf: pwParams.kdf,
+      iterations: iter,
+      salt: pwParams.salt,
+      hash: bufToBase64(hashBytes)
+    };
+
+    toast("提交注销请求…", "warn");
+    $("delHint").textContent = "提交请求…";
+
+    /* 3️⃣ 提交注销请求 */
+    const r = await authedFetch("/api/user", {
+      method: "DELETE",
+      headers: { "Content-Type":"application/json" },
+      body: JSON.stringify({ passwordHash })
+    });
+
+    const j = await readJsonSafe(r);
+
+    if(!r.ok || !j || !j.success){
+      throw new Error(j?.error || "delete account failed");
+    }
+
+    toast("账号已注销（本地将退出）", "ok");
+
+    /* 4️⃣ 本地清理 + 回登录页 */
+    closeWS();
+    wipeSensitiveMemory();
+    pendingLogin = null;
+
+    $("delPw").value = "";
+    $("delConfirm").value = "";
+    $("panelDelete").open = false;
+
+    backToLogin();
+    setStatus("");
+
+    connectWS();
+
+  }catch(e){
+    console.error(e);
+    toast("注销失败：" + e.message, "err");
+    $("delHint").textContent = "失败";
+  }
+};
+const drawer = document.getElementById("settingsDrawer");
+
+$("btnSettings").onclick = ()=>{
+  drawer.classList.remove("hidden");
+};
+
+$("btnCloseSettings").onclick = ()=>{
+  drawer.classList.add("hidden");
+};
+
+drawer.querySelector(".settings-mask").onclick = ()=>{
+  drawer.classList.add("hidden");
+};
+async function loadFriends(){
+  try{
+    console.log("[friends] loadFriends start", { hasToken: !!session.httpToken });
+    const r = await authedFetch("/api/friends");
+    console.log("[friends] response", r.status);
+    const j = await readJsonSafe(r);
+    console.log("[friends] body", j);
+
+    if(!r.ok || !j.success){
+      toast("好友列表加载失败", "err");
+      return;
+    }
+
+    friends = j.friends || [];
+    friendRequests = j.requests || [];
+
+  const alivePeers = new Set();
+  for(const f of friends){
+    const key = peerKey(f.username);
+    if(!key) continue;
+    alivePeers.add(key);
+    const localUnread = unreadDotMap.get(key) === true;
+    const serverUnread = !!f.has_unread;
+    unreadDotMap.set(key, localUnread || serverUnread);
+  }
+  for(const key of Array.from(unreadDotMap.keys())){
+    if(!alivePeers.has(key)) unreadDotMap.delete(key);
+  }
+  for(const key of Array.from(latestTsByPeer.keys())){
+    if(!alivePeers.has(key)) latestTsByPeer.delete(key);
+  }
+
+  // pre-derive session keys for friends with public_key.spki
+  for (const f of friends) {
+    if (!f.public_key || !f.public_key.spki) continue;
+    if (sessionKeys.has(f.username)) continue;
+    try {
+      const key = await deriveSessionKey(f.public_key.spki);
+      sessionKeys.set(f.username, key);
+    } catch (e) {
+      // ignore key derivation errors; user can retry later
+    }
+  }
+
+    renderFriendList();
+    renderRequestList();
+  }catch(e){
+    console.error("[friends] load exception", e);
+    toast("好友列表加载失败：服务器无响应", "err");
+  }
+}
+
+async function loadGroups(){
+  try{
+    const r = await authedFetch("/api/groups");
+    const j = await readJsonSafe(r);
+    if(!r.ok || !j || !j.success){
+      toast("群列表加载失败", "warn");
+      return;
+    }
+    groups = Array.isArray(j.groups) ? j.groups : [];
+    for(const g of groups){
+      const key = groupKey(g && g.id);
+      if(!key) continue;
+      const serverCount = Number(g.unread_count || 0);
+      if(serverCount > 0){
+        groupUnreadCountMap.set(key, serverCount);
+        groupUnreadDotMap.set(key, true);
+      }else if(g && g.has_unread){
+        groupUnreadDotMap.set(key, true);
+        if(!groupUnreadCountMap.has(key)) groupUnreadCountMap.set(key, 1);
+      }
+    }
+    renderGroupList();
+    refreshGroupUnreadFromServerHistory().catch(()=>{});
+  }catch(e){
+    console.error("[groups] load exception", e);
+    toast("群列表加载失败：服务器无响应", "warn");
+  }
+}
+
+async function refreshGroupUnreadFromServerHistory(){
+  for(const g of groups){
+    const gid = Number(g && g.id);
+    if(!gid) continue;
+    try{
+      const r = await authedFetch(`/api/group_messages?group_id=${encodeURIComponent(gid)}`);
+      const j = await readJsonSafe(r);
+      if(!r.ok || !j || !j.success) continue;
+      const list = Array.isArray(j.message) ? j.message : [];
+      if(list.length === 0) continue;
+      const last = list[list.length - 1];
+      const lastTs = normalizeTsMs(last && last.ts);
+      const key = groupKey(gid);
+      const lastRead = Number(groupLastReadTsMap.get(key) || 0);
+      if(lastTs > 0 && lastTs > lastRead){
+        markGroupUnread(gid, true);
+        if(!groupUnreadCountMap.has(key) || Number(groupUnreadCountMap.get(key) || 0) <= 0){
+          groupUnreadCountMap.set(key, 1);
+        }
+      }
+    }catch{}
+  }
+  renderGroupList();
+}
+
+function renderGroupList(){
+  if(!groupList) return;
+  groupList.innerHTML = "";
+  const keyword = groupSearchKeyword.trim().toLowerCase();
+  const list = keyword
+    ? groups.filter(g => String(g.name || "").toLowerCase().includes(keyword))
+    : groups;
+  for(const g of list){
+    const key = groupKey(g.id);
+    const unreadCount = Number(groupUnreadCountMap.get(key) || 0);
+    const hasUnread = unreadCount > 0 || groupUnreadDotMap.get(key) === true;
+    const unreadDot = hasUnread
+      ? (unreadCount > 0
+        ? `<span class="unread-badge" title="未读群消息">${Math.min(unreadCount,99)}</span>`
+        : `<span class="unread-dot" title="未读群消息"></span>`)
+      : "";
+    const div = document.createElement("div");
+    div.className = "im-item";
+    div.dataset.groupId = String(g.id || "");
+    if(currentChatType === "group" && currentChat && String(currentChat.id) === String(g.id)){
+      div.classList.add("active");
+    }
+    div.innerHTML = `
+      <div class="row" style="gap:10px;">
+        <div style="width:36px;height:36px;border-radius:50%;background:#dbeafe;color:#1e3a8a;display:flex;align-items:center;justify-content:center;font-weight:700;">群</div>
+        <div style="flex:1">${escapeHtml(g.name || ("群聊#" + g.id))}</div>
+        ${unreadDot}
+        <button class="btn ghost btn-sm">⋮</button>
+      </div>
+    `;
+    div.onclick = (e)=>{
+      if(e.target.tagName === "BUTTON") return;
+      selectGroup(g);
+    };
+    div.querySelector("button").onclick = ()=>manageGroup(g);
+    groupList.appendChild(div);
+  }
+  if(list.length === 0){
+    const empty = document.createElement("div");
+    empty.className = "im-item";
+    empty.style.color = "var(--muted2)";
+    empty.textContent = keyword ? "没有匹配的群组" : "暂无群组";
+    groupList.appendChild(empty);
+  }
+}
+
+async function inviteGroupMember(groupId, username){
+  const r = await authedFetch("/api/groups/invite", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({ group_id: groupId, username })
+  });
+  const j = await readJsonSafe(r);
+  if(!r.ok || !j || !j.success){
+    throw new Error(j?.error || "邀请失败");
+  }
+}
+
+async function removeGroupMember(groupId, username){
+  const r = await authedFetch("/api/groups/remove", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({ group_id: groupId, username })
+  });
+  const j = await readJsonSafe(r);
+  if(!r.ok || !j || !j.success){
+    throw new Error(j?.error || "移除失败");
+  }
+}
+
+async function leaveGroup(groupId){
+  const r = await authedFetch("/api/groups/leave", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({ group_id: groupId })
+  });
+  const j = await readJsonSafe(r);
+  if(!r.ok || !j || !j.success){
+    throw new Error(j?.error || "退群失败");
+  }
+}
+
+async function manageGroup(g){
+  selectGroup(g);
+}
+
+async function fetchGroupMembers(groupId){
+  const r = await authedFetch(`/api/groups/members?group_id=${encodeURIComponent(groupId)}`);
+  const j = await readJsonSafe(r);
+  if(!r.ok || !j || !j.success){
+    throw new Error(j?.error || "获取成员失败");
+  }
+  const members = Array.isArray(j.members) ? j.members : [];
+  for(const m of members){
+    const uname = String(m?.username || "").trim();
+    const spki = String(m?.public_key?.spki || "").trim();
+    if(uname && spki){
+      groupMemberPublicKeyMap.set(uname, spki);
+    }
+  }
+  return members;
+}
+
+function renderGroupMembersLine(members){
+  if(!chatMembersLine) return;
+  if(currentChatType !== "group"){
+    chatMembersLine.classList.add("hidden");
+    chatMembersLine.textContent = "";
+    return;
+  }
+  const list = Array.isArray(members) ? members : [];
+  const names = list
+    .map(m => String(m.display_name || m.username || "").trim())
+    .filter(Boolean);
+  const preview = names.slice(0, 5).join("、");
+  const more = names.length > 5 ? ` 等${names.length}人` : "";
+  chatMembersLine.textContent = names.length
+    ? `成员(${names.length})：${preview}${more}`
+    : "成员(0)";
+  chatMembersLine.classList.remove("hidden");
+}
+
+async function refreshCurrentGroupMembers(groupId){
+  try{
+    const members = await fetchGroupMembers(groupId);
+    if(currentChatType === "group" && currentChat && Number(currentChat.id) === Number(groupId)){
+      renderGroupMembersLine(members);
+    }
+  }catch(e){
+    if(currentChatType === "group" && currentChat && Number(currentChat.id) === Number(groupId)){
+      renderGroupMembersLine([]);
+    }
+  }
+}
+
+function openGroupInviteModal(group, mode="invite"){
+  if(!groupInviteModal || !groupInviteList) return;
+  groupInviteList.innerHTML = "";
+  const titleEl = groupInviteModal.querySelector("h2");
+  if(titleEl) titleEl.textContent = (mode === "remove") ? "移除群成员" : "邀请好友入群";
+  const renderRows = async ()=>{
+    const list = (mode === "remove")
+      ? await fetchGroupMembers(group.id)
+      : friends.map(f => ({ username: f.username, display_name: f.display_name }));
+    for(const f of list){
+      if(mode === "remove" && String(f.username || "") === String(session.username || "")) continue;
+    const row = document.createElement("div");
+    row.className = "im-item";
+    const avatar = HTTP_BASE + (f.avatar_url || "/resources/avatars/default.png");
+    row.innerHTML = `
+      <div class="row" style="gap:10px;">
+        <img src="${avatar}" style="width:32px;height:32px;border-radius:50%">
+        <div style="flex:1">${escapeHtml(f.display_name || f.username)}</div>
+        <button class="btn ${mode === "remove" ? "danger" : "primary"} btn-sm" type="button">${mode === "remove" ? "移除" : "邀请"}</button>
+      </div>
+    `;
+    row.querySelector("button").onclick = async ()=>{
+      try{
+        if(mode === "remove"){
+          await removeGroupMember(group.id, f.username);
+          toast("移除成功", "ok");
+          row.remove();
+          refreshCurrentGroupMembers(group.id);
+        }else{
+          await inviteGroupMember(group.id, f.username);
+          toast("邀请成功", "ok");
+          refreshCurrentGroupMembers(group.id);
+        }
+      }catch(e){
+        toast(e.message || "操作失败", "err");
+      }
+    };
+    groupInviteList.appendChild(row);
+  }
+  if(groupInviteList.children.length === 0){
+    const empty = document.createElement("div");
+    empty.className = "im-item";
+    empty.style.color = "var(--muted2)";
+    empty.textContent = (mode === "remove") ? "暂无可移除成员" : "暂无可邀请好友";
+    groupInviteList.appendChild(empty);
+  }
+  };
+  groupInviteModal.classList.remove("hidden");
+  renderRows().catch((e)=>toast(e.message || "加载失败", "err"));
+}
+
+function closeGroupInviteModal(){
+  if(groupInviteModal) groupInviteModal.classList.add("hidden");
+}
+
+
+function renderFriendList(){
+  const box = document.getElementById("friendList");
+  box.innerHTML = "";
+
+  for(const f of friends){
+    const div = document.createElement("div");
+    div.className = "im-item";
+    div.dataset.username = f.username || "";
+    if(currentChatType === "friend" && currentChat && peerKey(currentChat.username) === peerKey(f.username)){
+      div.classList.add("active");
+    }
+
+    const avatar = HTTP_BASE + (f.avatar_url || "/resources/avatars/default.png");
+    const hasUnread = unreadDotMap.get(peerKey(f.username)) === true;
+    const unreadDot = hasUnread ? `<span class="unread-dot" title="未读消息"></span>` : "";
+
+    div.innerHTML = `
+      <div class="row" style="gap:10px;">
+        <img src="${avatar}" style="width:36px;height:36px;border-radius:50%">
+        <div style="flex:1">${escapeHtml(f.display_name || f.username)}</div>
+        ${unreadDot}
+        <button class="btn ghost btn-sm">⋮</button>
+      </div>
+    `;
+
+    div.onclick = (e)=>{
+      if(e.target.tagName === "BUTTON") return;
+      selectFriend(f);
+    };
+
+    // 删除好友
+    div.querySelector("button").onclick = ()=>{
+      deleteFriend(f.username);
+    };
+
+    box.appendChild(div);
+  }
+}
+
+async function deleteFriend(username){
+  if(!confirm("确定删除好友？")) return;
+
+  const r = await authedFetch("/api/friends", {
+    method: "DELETE",
+    headers: { "Content-Type":"application/json" },
+    body: JSON.stringify({ username })
+  });
+
+  const j = await readJsonSafe(r);
+
+  if(!r.ok || !j.success){
+    toast(j?.error || "删除失败", "err");
+    return;
+  }
+
+  sessionKeys.delete(username);
+
+  toast("好友已删除", "ok");
+  loadFriends();
+
+  clearChatSelection();
+}
+
+
+
+function selectFriend(f){
+ currentChatType = "friend";
+ currentChat=f;
+ const token = ++historyLoadToken;
+
+ clearUnread(f.username);
+ renderFriendList();
+
+ chatMessages.innerHTML="";
+ if(chatMessages) chatMessages.classList.remove("hidden");
+ if(chatPlaceholder) chatPlaceholder.classList.add("hidden");
+ if(chatInputArea) chatInputArea.classList.remove("hidden");
+ if(chatTitle) chatTitle.textContent = f.display_name || f.username;
+ if(chatSub) chatSub.textContent = "与 " + (f.username || "") + " 的对话";
+ if(chatMembersLine){
+   chatMembersLine.classList.add("hidden");
+   chatMembersLine.textContent = "";
+ }
+ if($("chatState")) $("chatState").textContent = "私聊";
+ if(btnGroupInvite) btnGroupInvite.classList.add("hidden");
+ if(btnGroupRemove) btnGroupRemove.classList.add("hidden");
+ if(btnGroupLeave) btnGroupLeave.classList.add("hidden");
+ setChatHistoryHint("正在接收历史消息...");
+ if(btnCloseChat) btnCloseChat.classList.remove("hidden");
+ loadHistory(f.username, token);
+ setMobilePane("chat");
+}
+
+function selectGroup(g){
+  if(currentChatType === "group" && currentChat && Number(currentChat.id) === Number(g?.id)){
+    renderGroupList();
+    refreshCurrentGroupMembers(g.id);
+    return;
+  }
+  currentChatType = "group";
+  currentChat = g;
+  clearGroupUnread(g.id);
+  const token = ++historyLoadToken;
+  renderFriendList();
+  renderGroupList();
+
+  chatMessages.innerHTML = "";
+  if(chatMessages) chatMessages.classList.remove("hidden");
+  if(chatPlaceholder) chatPlaceholder.classList.add("hidden");
+  if(chatInputArea) chatInputArea.classList.remove("hidden");
+  if(chatTitle) chatTitle.textContent = g.name || ("群聊#" + g.id);
+  if(chatSub) chatSub.textContent = "群组会话";
+  renderGroupMembersLine([]);
+  if($("chatState")) $("chatState").textContent = "群聊";
+  if(btnGroupInvite) btnGroupInvite.classList.remove("hidden");
+  const isOwner = String(g.owner_username || "") === String(session.username || "");
+  if(btnGroupRemove) btnGroupRemove.classList.toggle("hidden", !isOwner);
+  if(btnGroupLeave) btnGroupLeave.classList.remove("hidden");
+  setChatHistoryHint("正在接收历史消息...");
+  if(btnCloseChat) btnCloseChat.classList.remove("hidden");
+  loadGroupHistory(g.id, token);
+  refreshCurrentGroupMembers(g.id);
+  setMobilePane("chat");
+}
+
+function clearChatSelection(){
+  historyLoadToken++;
+  currentChat = null;
+  currentChatType = "none";
+  document.querySelectorAll(".im-item").forEach(x=>x.classList.remove("active"));
+  if(chatMessages){
+    chatMessages.innerHTML = "";
+    chatMessages.classList.add("hidden");
+  }
+  if(chatPlaceholder) chatPlaceholder.classList.remove("hidden");
+  if(chatInputArea) chatInputArea.classList.add("hidden");
+  if(chatTitle) chatTitle.textContent = "未选择聊天";
+  if(chatSub) chatSub.textContent = "请选择一个好友开始聊天";
+  if(chatMembersLine){
+    chatMembersLine.classList.add("hidden");
+    chatMembersLine.textContent = "";
+  }
+  if($("chatState")) $("chatState").textContent = "私聊";
+  if(btnGroupInvite) btnGroupInvite.classList.add("hidden");
+  if(btnGroupRemove) btnGroupRemove.classList.add("hidden");
+  if(btnGroupLeave) btnGroupLeave.classList.add("hidden");
+  setChatHistoryHint("");
+  if(btnCloseChat) btnCloseChat.classList.add("hidden");
+
+  setMobilePane("list");
+}
+
+document.getElementById("btnAddFriend").onclick = async ()=>{
+  const name = prompt("输入对方用户名");
+  if(!name) return;
+
+  let r;
+  try{
+    r = await authedFetch("/api/friends/request", {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({ username: name })
+    });
+  }catch(e){
+    toast("network_error", "err");
+    return;
+  }
+
+  if(!r.ok){
+    toast("http_error", "err");
+    return;
+  }
+
+  const data = await r.json();
+
+  if(data.success){
+    if(data.status === "accepted"){
+    // 对方之前已经请求过 → 直接成为好友
+
+      const key = await deriveSessionKey(data.public_key.spki);
+      sessionKeys.set(name, key);
+
+      toast("已自动互加为好友", "ok");
+      loadFriends();
+      return;
+    }
+    else if(data.status === "pending"){
+      toast("已发送好友请求", "ok");
+      return;
+    }
+    toast(data.status || "ok", "ok");
+  }else{
+    toast(data.error || "unknown_error", "err");
+  }
+};
+
+if(btnAddGroup){
+  btnAddGroup.onclick = async ()=>{
+    try{
+      const name = (prompt("输入群名称") || "").trim();
+      if(!name) return;
+      const r = await authedFetch("/api/groups", {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({ name })
+      });
+      const j = await readJsonSafe(r);
+      if(!r.ok || !j || !j.success){
+        toast("创建群失败", "err");
+        return;
+      }
+      toast("群创建成功", "ok");
+      await loadGroups();
+    }catch(e){
+      console.error("[groups] create exception", e);
+      toast("创建群失败", "err");
+    }
+  };
+}
+
+if(btnSearchGroup){
+  btnSearchGroup.onclick = ()=>{
+    const kw = prompt("输入群名称关键字（留空清除搜索）");
+    if(kw === null) return;
+    groupSearchKeyword = String(kw || "").trim();
+    renderGroupList();
+  };
+}
+
+if(btnGroupInvite){
+  btnGroupInvite.onclick = ()=>{
+    if(currentChatType !== "group" || !currentChat) return;
+    openGroupInviteModal(currentChat, "invite");
+  };
+}
+
+if(btnGroupRemove){
+  btnGroupRemove.onclick = ()=>{
+    if(currentChatType !== "group" || !currentChat) return;
+    openGroupInviteModal(currentChat, "remove");
+  };
+}
+
+if(btnGroupLeave){
+  btnGroupLeave.onclick = async ()=>{
+    if(currentChatType !== "group" || !currentChat) return;
+    if(!confirm("确定退群？")) return;
+    try{
+      await leaveGroup(currentChat.id);
+      toast("已退群", "ok");
+      clearChatSelection();
+      await loadGroups();
+    }catch(e){
+      toast(e.message || "退群失败", "err");
+    }
+  };
+}
+
+if(btnCloseGroupInvite){
+  btnCloseGroupInvite.onclick = closeGroupInviteModal;
+}
+if(groupInviteModal){
+  const mask = groupInviteModal.querySelector(".settings-mask");
+  if(mask) mask.onclick = closeGroupInviteModal;
+}
+
+
+function renderRequestList(){
+  const box = document.getElementById("requestList");
+  box.innerHTML = "";
+
+  for(const r of friendRequests){
+    const div = document.createElement("div");
+    div.className = "im-item";
+
+    const avatar = HTTP_BASE + (r.avatar_url || "/resources/avatars/default.png");
+
+    div.innerHTML = `
+      <div class="row" style="gap:10px;">
+        <img src="${avatar}" style="width:32px;height:32px;border-radius:50%">
+        <div>${escapeHtml(r.display_name || r.username)}</div>
+      </div>
+
+      <div class="row" style="margin-top:6px;">
+        <button class="btn primary btn-sm">同意</button>
+        <button class="btn danger btn-sm">拒绝</button>
+      </div>
+    `;
+
+    div.querySelector(".btn.primary").onclick =
+      ()=>acceptFriend(r.username);
+
+    div.querySelector(".btn.danger").onclick =
+      ()=>rejectFriend(r.username);
+
+    box.appendChild(div);
+  }
+}
+
+async function deriveSessionKey(peerSpkiB64){
+  const peerKey = await crypto.subtle.importKey(
+    "spki",
+    base64ToBytes(peerSpkiB64),
+    { name:"ECDH", namedCurve:"P-256" },
+    false,
+    []
+  );
+
+  return await crypto.subtle.deriveKey(
+    { name:"ECDH", public: peerKey },
+    session.privateKeyCryptoKey,
+    { name:"AES-GCM", length:256 },
+    false,
+    ["encrypt","decrypt"]
+  );
+}
+async function acceptFriend(username){
+  const r = await authedFetch("/api/friends/accept", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({ username })
+  });
+
+  const j = await readJsonSafe(r);
+  if(!r.ok || !j.success){
+    toast("同意失败", "err");
+    return;
+  }
+
+  const key = await deriveSessionKey(j.public_key.spki);
+  sessionKeys.set(username, key);
+
+  toast("好友已添加", "ok");
+  // optimistic UI update to avoid needing a manual refresh
+  friendRequests = friendRequests.filter(r => r.username !== username);
+  if(!friends.find(f => f.username === username)){
+    const req = friendRequests.find(r => r.username === username);
+    friends.unshift({
+      username,
+      display_name: req ? req.display_name : "",
+      avatar_url: req ? req.avatar_url : "/resources/avatars/default.png",
+      public_key: j.public_key
+    });
+  }
+  renderFriendList();
+  renderRequestList();
+  await loadFriends();
+}
+
+async function rejectFriend(username){
+  const r = await authedFetch("/api/friends/reject", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({ username })
+  });
+  const j = await readJsonSafe(r);
+  if(!r.ok || !j.success){
+    toast("拒绝失败", "err");
+    return;
+  }
+  toast("已拒绝", "ok");
+  loadFriends();
+}
+
+async function handleFriendAccepted(msg){
+  const username = msg.username;
+  if(!username) return;
+  if(!friends.find(f => f.username === username)){
+    friends.unshift({
+      username,
+      display_name: msg.display_name || "",
+      avatar_url: msg.avatar_url || "/resources/avatars/default.png",
+      public_key: msg.public_key
+    });
+  }
+  markUnread(username, false);
+  if(msg.public_key && msg.public_key.spki){
+    try{
+      const key = await deriveSessionKey(msg.public_key.spki);
+      sessionKeys.set(username, key);
+    }catch{}
+  }
+  renderFriendList();
+  renderRequestList();
+  if(typeof toast === "function") toast("已成为好友", "ok");
+}
+
+function handleFriendRemoved(msg){
+  const username = msg.username;
+  if(!username) return;
+  const uname = String(username).toLowerCase();
+  friends = friends.filter(f => String(f.username || "").toLowerCase() !== uname);
+  friendRequests = friendRequests.filter(r => String(r.username || "").toLowerCase() !== uname);
+  sessionKeys.delete(username);
+  unreadDotMap.delete(uname);
+  latestTsByPeer.delete(uname);
+  if(currentChat && String(currentChat.username || "").toLowerCase() === uname){
+    clearChatSelection();
+  }
+  renderFriendList();
+  renderRequestList();
+  if(typeof toast === "function") toast("对方已删除好友", "warn");
+}
+
+
+/* =====================================================
+   页面加载：自动连接 WS
+===================================================== */
+document.addEventListener("visibilitychange", ()=>{
+  if(document.visibilityState === "visible"){
+    if((!ws || ws.readyState !== WebSocket.OPEN) && ensureServerConfig()){
+      connectWS();
+    }
+  }
+});
+
+window.addEventListener("resize", ()=>{
+  setMobilePane(currentChat ? "chat" : "list");
+});
+
+if(btnSaveServerConfig){
+  btnSaveServerConfig.addEventListener("click", ()=>{
+    const cfg = normalizeServerConfig({
+      host: serverHostInput?.value,
+      httpPort: serverHttpPortInput?.value,
+      wsPort: serverWsPortInput?.value
+    });
+    if(!cfg){
+      if(serverCfgHint) serverCfgHint.textContent = "请填写正确的服务器地址和端口";
+      return;
+    }
+    saveServerConfig(cfg);
+    applyServerConfig(cfg);
+    if(serverCfgHint) serverCfgHint.textContent = "";
+    if(serverSetup) serverSetup.classList.add("hidden");
+    if(drawer) drawer.classList.add("hidden");
+    if(ws){
+      try{ ws.close(4000, "server config updated"); }catch{}
+      ws = null;
+      wsReady = false;
+    }
+    connectWS();
+  });
+}
+
+if(btnCancelServerConfig){
+  btnCancelServerConfig.addEventListener("click", ()=>{
+    if(loadServerConfig() && serverSetup){
+      serverSetup.classList.add("hidden");
+    }
+  });
+}
+
+if(btnResetServerConfig){
+  btnResetServerConfig.addEventListener("click", ()=>{
+    if(serverHostInput) serverHostInput.value = DEFAULT_SERVER_HOST;
+    if(serverHttpPortInput) serverHttpPortInput.value = String(DEFAULT_HTTP_PORT);
+    if(serverWsPortInput) serverWsPortInput.value = String(DEFAULT_WS_PORT);
+    if(serverCfgHint) serverCfgHint.textContent = "已恢复默认，点击“保存并进入”生效";
+  });
+}
+
+if(btnServerConfigLogin){
+  btnServerConfigLogin.addEventListener("click", ()=>{
+    openServerSetup();
+  });
+}
+
+if(btnServerConfigInSettings){
+  btnServerConfigInSettings.addEventListener("click", ()=>{
+    openServerSetup();
+  });
+}
+
+fillServerConfigInputs();
+
+if(ensureServerConfig()){
+  connectWS();
+}
+</script>
+
+</body>
+</html>
